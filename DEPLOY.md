@@ -16,6 +16,8 @@
 - `POSTGRES_URL_NON_POOLING` — для миграций
 - `POSTGRES_URL`, `SUPABASE_URL` и др.
 
+**Не добавляйте свой `DATABASE_URL`**, если он конфликтует с Supabase — приложение в первую очередь использует `POSTGRES_PRISMA_URL`.
+
 **Добавьте вручную** в Vercel → Settings → Environment Variables:
 
 ```env

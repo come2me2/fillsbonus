@@ -53,11 +53,11 @@ export async function clearSessionCookie() {
 
 export async function getSessionUser(): Promise<SessionUser | null> {
   const hasDatabase =
-    process.env.DATABASE_URL ||
-    process.env.POSTGRES_PRISMA_URL ||
-    process.env.POSTGRES_URL;
+    process.env.POSTGRES_PRISMA_URL?.trim() ||
+    process.env.DATABASE_URL?.trim() ||
+    process.env.POSTGRES_URL?.trim();
 
-  if (!hasDatabase || !process.env.AUTH_SECRET) {
+  if (!hasDatabase || !process.env.AUTH_SECRET?.trim()) {
     return null;
   }
 

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Prisma } from "@/generated/prisma/client";
+import { getRegisterErrorMessage } from "@/lib/database-url";
 import { registerUser } from "@/lib/auth";
 import { ZodError } from "zod";
 
@@ -18,6 +18,8 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
+    console.error("[register]", error);
+
     if (error instanceof ZodError) {
       return NextResponse.json(
         { ok: false, error: error.issues[0]?.message ?? "Validation error" },
@@ -25,19 +27,8 @@ export async function POST(request: Request) {
       );
     }
 
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2002"
-    ) {
-      return NextResponse.json(
-        { ok: false, error: "Пользователь с таким email или телефоном уже существует" },
-        { status: 409 },
-      );
-    }
+    const { message, status } = getRegisterErrorMessage(error);
 
-    return NextResponse.json(
-      { ok: false, error: "Не удалось зарегистрироваться" },
-      { status: 500 },
-    );
+    return NextResponse.json({ ok: false, error: message }, { status });
   }
 }

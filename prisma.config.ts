@@ -3,11 +3,16 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+function readEnv(name: string): string | undefined {
+  const value = process.env[name]?.trim();
+  return value ? value : undefined;
+}
+
 const migrationDatabaseUrl =
-  process.env.DATABASE_URL ??
-  process.env.POSTGRES_URL_NON_POOLING ??
-  process.env.POSTGRES_URL ??
-  process.env.POSTGRES_PRISMA_URL;
+  readEnv("POSTGRES_URL_NON_POOLING") ??
+  readEnv("DATABASE_URL") ??
+  readEnv("POSTGRES_URL") ??
+  readEnv("POSTGRES_PRISMA_URL");
 
 export default defineConfig({
   schema: "prisma/schema.prisma",

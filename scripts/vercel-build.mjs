@@ -4,12 +4,17 @@ function run(command) {
   execSync(command, { stdio: "inherit" });
 }
 
+function readEnv(name) {
+  const value = process.env[name]?.trim();
+  return value ? value : undefined;
+}
+
 function getMigrationDatabaseUrl() {
   return (
-    process.env.DATABASE_URL ??
-    process.env.POSTGRES_URL_NON_POOLING ??
-    process.env.POSTGRES_URL ??
-    process.env.POSTGRES_PRISMA_URL
+    readEnv("POSTGRES_URL_NON_POOLING") ??
+    readEnv("DATABASE_URL") ??
+    readEnv("POSTGRES_URL") ??
+    readEnv("POSTGRES_PRISMA_URL")
   );
 }
 
@@ -18,6 +23,7 @@ run("npx prisma generate");
 const migrationDatabaseUrl = getMigrationDatabaseUrl();
 
 if (migrationDatabaseUrl) {
+  console.log("Running prisma migrate deploy...");
   run("npx prisma migrate deploy");
 } else {
   console.warn("");
