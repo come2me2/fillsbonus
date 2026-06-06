@@ -17,9 +17,7 @@ function createPrismaClient() {
 
   const adapter = new PrismaPg({
     connectionString,
-    ssl: connectionString.includes("supabase.com")
-      ? { rejectUnauthorized: false }
-      : undefined,
+    ssl: connectionString.includes("supabase.com") ? { rejectUnauthorized: false } : false,
   });
 
   return new PrismaClient({

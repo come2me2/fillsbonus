@@ -42,12 +42,7 @@ function appendPgBouncerParams(url: string): string {
 }
 
 function appendSslModeIfNeeded(url: string): string {
-  if (url.includes("sslmode=") || !url.includes("supabase.com")) {
-    return url;
-  }
-
-  const separator = url.includes("?") ? "&" : "?";
-  return `${url}${separator}sslmode=require`;
+  return url;
 }
 
 export function getRuntimeDatabaseUrl(): string | undefined {
