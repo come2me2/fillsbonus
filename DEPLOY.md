@@ -37,7 +37,9 @@ npx prisma migrate dev
 ## 4. Vercel
 
 1. Импортируйте репозиторий `come2me2/fillsbonus` в [vercel.com](https://vercel.com).
-2. **Обязательно** добавьте переменные окружения **до первого деплоя** (Settings → Environment Variables):
+2. **Обязательно** добавьте переменные окружения в Vercel → **Settings → Environment Variables**.
+
+   Для каждой переменной включите все окружения: **Production**, **Preview**, **Development**.
 
 ```env
 DATABASE_URL=postgresql://...
@@ -48,7 +50,9 @@ NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
 TILDA_WEBHOOK_SECRET=
 ```
 
-Для Supabase используйте **Transaction pooler** connection string (порт 6543) — он лучше работает с serverless.
+Для Supabase используйте **Transaction pooler** connection string (порт **6543**).
+
+Без `DATABASE_URL` деплой соберётся, но регистрация и кабинет работать не будут.
 
 3. Build Command в Vercel (Settings → General → Build & Development Settings):
 
