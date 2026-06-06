@@ -52,6 +52,10 @@ export async function clearSessionCookie() {
 }
 
 export async function getSessionUser(): Promise<SessionUser | null> {
+  if (!process.env.DATABASE_URL || !process.env.AUTH_SECRET) {
+    return null;
+  }
+
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
 

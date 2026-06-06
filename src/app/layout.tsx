@@ -19,6 +19,8 @@ export const metadata: Metadata = {
     "Приводите друзей в Fils и получайте до 10% от оплаченного заказа на бонусный баланс.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -36,16 +36,34 @@ npx prisma migrate dev
 
 ## 4. Vercel
 
+1. Импортируйте репозиторий `come2me2/fillsbonus` в [vercel.com](https://vercel.com).
+2. **Обязательно** добавьте переменные окружения **до первого деплоя** (Settings → Environment Variables):
+
+```env
+DATABASE_URL=postgresql://...
+AUTH_SECRET=случайная_длинная_строка_32+_символов
+ADMIN_EMAILS=info@filsdesign.ru
+ADMIN_EMAIL=info@filsdesign.ru
+NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
+TILDA_WEBHOOK_SECRET=
+```
+
+Для Supabase используйте **Transaction pooler** connection string (порт 6543) — он лучше работает с serverless.
+
+3. Build Command в Vercel (Settings → General → Build & Development Settings):
+
+```text
+npm run vercel-build
+```
+
+Эта команда применит миграции Prisma перед сборкой.
+
+4. Deploy:
+
 ```bash
 npm i -g vercel
 vercel
 ```
-
-Build command: `npm run build`  
-Install command: `npm install`  
-Output: Next.js default
-
-Добавьте env-переменные в Vercel Dashboard.
 
 ## 5. Поддомен bonus.fillsdesign.ru
 
