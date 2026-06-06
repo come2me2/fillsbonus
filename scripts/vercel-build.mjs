@@ -4,17 +4,25 @@ function run(command) {
   execSync(command, { stdio: "inherit" });
 }
 
+function getMigrationDatabaseUrl() {
+  return (
+    process.env.DATABASE_URL ??
+    process.env.POSTGRES_URL_NON_POOLING ??
+    process.env.POSTGRES_URL ??
+    process.env.POSTGRES_PRISMA_URL
+  );
+}
+
 run("npx prisma generate");
 
-const databaseUrl = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
+const migrationDatabaseUrl = getMigrationDatabaseUrl();
 
-if (databaseUrl) {
+if (migrationDatabaseUrl) {
   run("npx prisma migrate deploy");
 } else {
   console.warn("");
-  console.warn("WARNING: DATABASE_URL is not set. Skipping prisma migrate deploy.");
-  console.warn("Add DATABASE_URL in Vercel -> Settings -> Environment Variables.");
-  console.warn("Enable it for Production, Preview, and Development, then redeploy.");
+  console.warn("WARNING: Database URL is not set. Skipping prisma migrate deploy.");
+  console.warn("Connect Supabase in Vercel or add DATABASE_URL, then redeploy.");
   console.warn("");
 }
 

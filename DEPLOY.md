@@ -8,11 +8,31 @@
 
 ## 2. Переменные окружения
 
-Создайте `.env` локально и те же переменные в Vercel:
+### Supabase через Vercel (рекомендуется)
+
+Если вы подключили Supabase в Vercel → Integrations, переменные уже добавлены автоматически:
+
+- `POSTGRES_PRISMA_URL` — для приложения (Prisma)
+- `POSTGRES_URL_NON_POOLING` — для миграций
+- `POSTGRES_URL`, `SUPABASE_URL` и др.
+
+**Добавьте вручную** в Vercel → Settings → Environment Variables:
+
+```env
+AUTH_SECRET=случайная_длинная_строка_32+_символов
+ADMIN_EMAILS=info@filsdesign.ru
+ADMIN_EMAIL=info@filsdesign.ru
+NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
+TILDA_WEBHOOK_SECRET=
+```
+
+`AUTH_SECRET` и `ADMIN_EMAILS` Supabase не создаёт — без них не будет входа и админки.
+
+### Своя база (без интеграции Vercel)
 
 ```env
 DATABASE_URL=postgresql://...
-AUTH_SECRET=случайная_длинная_строка_32+_символов
+AUTH_SECRET=...
 ADMIN_EMAILS=info@filsdesign.ru
 ADMIN_EMAIL=info@filsdesign.ru
 NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
