@@ -2,17 +2,7 @@
 // npm install --save-dev prisma dotenv
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
-
-function readEnv(name: string): string | undefined {
-  const value = process.env[name]?.trim();
-  return value ? value : undefined;
-}
-
-const migrationDatabaseUrl =
-  readEnv("POSTGRES_URL_NON_POOLING") ??
-  readEnv("DATABASE_URL") ??
-  readEnv("POSTGRES_URL") ??
-  readEnv("POSTGRES_PRISMA_URL");
+import { getMigrationDatabaseUrl } from "./src/lib/database-url";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -20,6 +10,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: migrationDatabaseUrl,
+    url: getMigrationDatabaseUrl(),
   },
 });

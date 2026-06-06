@@ -1,5 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { hasDatabaseEnv } from "@/lib/database-url";
 import { prisma } from "@/lib/prisma";
 
 const SESSION_COOKIE = "filsbonus_session";
@@ -52,12 +53,7 @@ export async function clearSessionCookie() {
 }
 
 export async function getSessionUser(): Promise<SessionUser | null> {
-  const hasDatabase =
-    process.env.POSTGRES_PRISMA_URL?.trim() ||
-    process.env.DATABASE_URL?.trim() ||
-    process.env.POSTGRES_URL?.trim();
-
-  if (!hasDatabase || !process.env.AUTH_SECRET?.trim()) {
+  if (!hasDatabaseEnv() || !process.env.AUTH_SECRET?.trim()) {
     return null;
   }
 

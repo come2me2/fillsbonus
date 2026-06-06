@@ -1,26 +1,33 @@
 import { execSync } from "node:child_process";
 
+const MIGRATION_DATABASE_KEYS = [
+  "FILLSBONUS_POSTGRES_URL_NON_POOLING",
+  "POSTGRES_URL_NON_POOLING",
+  "DATABASE_URL",
+  "FILLSBONUS_POSTGRES_URL",
+  "POSTGRES_URL",
+  "FILLSBONUS_POSTGRES_PRISMA_URL",
+  "POSTGRES_PRISMA_URL",
+];
+
 function run(command) {
   execSync(command, { stdio: "inherit" });
 }
 
-function readEnv(name) {
-  const value = process.env[name]?.trim();
-  return value ? value : undefined;
-}
+function readFirstEnv(keys) {
+  for (const key of keys) {
+    const value = process.env[key]?.trim();
+    if (value) {
+      return value;
+    }
+  }
 
-function getMigrationDatabaseUrl() {
-  return (
-    readEnv("POSTGRES_URL_NON_POOLING") ??
-    readEnv("DATABASE_URL") ??
-    readEnv("POSTGRES_URL") ??
-    readEnv("POSTGRES_PRISMA_URL")
-  );
+  return undefined;
 }
 
 run("npx prisma generate");
 
-const migrationDatabaseUrl = getMigrationDatabaseUrl();
+const migrationDatabaseUrl = readFirstEnv(MIGRATION_DATABASE_KEYS);
 
 if (migrationDatabaseUrl) {
   console.log("Running prisma migrate deploy...");

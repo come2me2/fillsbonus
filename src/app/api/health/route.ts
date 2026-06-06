@@ -1,22 +1,15 @@
 import { NextResponse } from "next/server";
-import { getRuntimeDatabaseUrl, getMigrationDatabaseUrl } from "@/lib/database-url";
+import {
+  getDatabaseEnvStatus,
+  getMigrationDatabaseUrl,
+  getRuntimeDatabaseUrl,
+} from "@/lib/database-url";
 import { getPrisma } from "@/lib/prisma";
-
-function hasEnv(name: string) {
-  return Boolean(process.env[name]?.trim());
-}
 
 export async function GET() {
   const runtimeUrl = getRuntimeDatabaseUrl();
   const migrationUrl = getMigrationDatabaseUrl();
-
-  const envStatus = {
-    POSTGRES_PRISMA_URL: hasEnv("POSTGRES_PRISMA_URL"),
-    POSTGRES_URL_NON_POOLING: hasEnv("POSTGRES_URL_NON_POOLING"),
-    POSTGRES_URL: hasEnv("POSTGRES_URL"),
-    DATABASE_URL: hasEnv("DATABASE_URL"),
-    AUTH_SECRET: hasEnv("AUTH_SECRET"),
-  };
+  const envStatus = getDatabaseEnvStatus();
 
   if (!runtimeUrl) {
     return NextResponse.json({

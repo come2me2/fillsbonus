@@ -1,6 +1,35 @@
+const RUNTIME_DATABASE_KEYS = [
+  "FILLSBONUS_POSTGRES_PRISMA_URL",
+  "POSTGRES_PRISMA_URL",
+  "DATABASE_URL",
+  "FILLSBONUS_POSTGRES_URL",
+  "POSTGRES_URL",
+] as const;
+
+const MIGRATION_DATABASE_KEYS = [
+  "FILLSBONUS_POSTGRES_URL_NON_POOLING",
+  "POSTGRES_URL_NON_POOLING",
+  "DATABASE_URL",
+  "FILLSBONUS_POSTGRES_URL",
+  "POSTGRES_URL",
+  "FILLSBONUS_POSTGRES_PRISMA_URL",
+  "POSTGRES_PRISMA_URL",
+] as const;
+
 function readEnv(name: string): string | undefined {
   const value = process.env[name]?.trim();
   return value ? value : undefined;
+}
+
+export function readFirstEnv(keys: readonly string[]): string | undefined {
+  for (const key of keys) {
+    const value = readEnv(key);
+    if (value) {
+      return value;
+    }
+  }
+
+  return undefined;
 }
 
 function appendPgBouncerParams(url: string): string {
@@ -22,10 +51,7 @@ function appendSslModeIfNeeded(url: string): string {
 }
 
 export function getRuntimeDatabaseUrl(): string | undefined {
-  const url =
-    readEnv("POSTGRES_PRISMA_URL") ??
-    readEnv("DATABASE_URL") ??
-    readEnv("POSTGRES_URL");
+  const url = readFirstEnv(RUNTIME_DATABASE_KEYS);
 
   if (!url) {
     return undefined;
@@ -41,17 +67,26 @@ export function getRuntimeDatabaseUrl(): string | undefined {
 }
 
 export function getMigrationDatabaseUrl(): string | undefined {
-  const url =
-    readEnv("POSTGRES_URL_NON_POOLING") ??
-    readEnv("DATABASE_URL") ??
-    readEnv("POSTGRES_URL") ??
-    readEnv("POSTGRES_PRISMA_URL");
+  const url = readFirstEnv(MIGRATION_DATABASE_KEYS);
 
   if (!url) {
     return undefined;
   }
 
   return appendSslModeIfNeeded(url);
+}
+
+export function hasDatabaseEnv(): boolean {
+  return Boolean(getRuntimeDatabaseUrl());
+}
+
+export function getDatabaseEnvStatus(): Record<string, boolean> {
+  return Object.fromEntries(
+    [...RUNTIME_DATABASE_KEYS, ...MIGRATION_DATABASE_KEYS, "AUTH_SECRET"].map((key) => [
+      key,
+      Boolean(readEnv(key)),
+    ]),
+  );
 }
 
 function getRegisterErrorMessage(error: unknown): { message: string; status: number } {
@@ -108,4 +143,4 @@ function getRegisterErrorMessage(error: unknown): { message: string; status: num
   };
 }
 
-export { getRegisterErrorMessage };
+export { getRegisterErrorMessage, RUNTIME_DATABASE_KEYS, MIGRATION_DATABASE_KEYS };

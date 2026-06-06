@@ -10,13 +10,12 @@
 
 ### Supabase через Vercel (рекомендуется)
 
-Если вы подключили Supabase в Vercel → Integrations, переменные уже добавлены автоматически:
+Если вы подключили Supabase в Vercel → Integrations, переменные добавляются с префиксом проекта, например:
 
-- `POSTGRES_PRISMA_URL` — для приложения (Prisma)
-- `POSTGRES_URL_NON_POOLING` — для миграций
-- `POSTGRES_URL`, `SUPABASE_URL` и др.
+- `FILLSBONUS_POSTGRES_PRISMA_URL` — для приложения (Prisma)
+- `FILLSBONUS_POSTGRES_URL_NON_POOLING` — для миграций
 
-**Не добавляйте свой `DATABASE_URL`**, если он конфликтует с Supabase — приложение в первую очередь использует `POSTGRES_PRISMA_URL`.
+Также поддерживаются стандартные имена без префикса: `POSTGRES_PRISMA_URL`, `POSTGRES_URL_NON_POOLING`.
 
 **Добавьте вручную** в Vercel → Settings → Environment Variables:
 
