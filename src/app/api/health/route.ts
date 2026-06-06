@@ -2,15 +2,27 @@ import { NextResponse } from "next/server";
 import { getRuntimeDatabaseUrl, getMigrationDatabaseUrl } from "@/lib/database-url";
 import { getPrisma } from "@/lib/prisma";
 
+function hasEnv(name: string) {
+  return Boolean(process.env[name]?.trim());
+}
+
 export async function GET() {
   const runtimeUrl = getRuntimeDatabaseUrl();
   const migrationUrl = getMigrationDatabaseUrl();
+
+  const envStatus = {
+    POSTGRES_PRISMA_URL: hasEnv("POSTGRES_PRISMA_URL"),
+    POSTGRES_URL_NON_POOLING: hasEnv("POSTGRES_URL_NON_POOLING"),
+    POSTGRES_URL: hasEnv("POSTGRES_URL"),
+    DATABASE_URL: hasEnv("DATABASE_URL"),
+    AUTH_SECRET: hasEnv("AUTH_SECRET"),
+  };
 
   if (!runtimeUrl) {
     return NextResponse.json({
       ok: false,
       error: "Database URL is not configured",
-      hasAuthSecret: Boolean(process.env.AUTH_SECRET),
+      envStatus,
     });
   }
 
@@ -23,7 +35,7 @@ export async function GET() {
 
     return NextResponse.json({
       ok: true,
-      hasAuthSecret: Boolean(process.env.AUTH_SECRET),
+      envStatus,
       hasUserTable: tables.length > 0,
       runtimeUrlConfigured: Boolean(runtimeUrl),
       migrationUrlConfigured: Boolean(migrationUrl),
@@ -35,7 +47,7 @@ export async function GET() {
       {
         ok: false,
         error: message,
-        hasAuthSecret: Boolean(process.env.AUTH_SECRET),
+        envStatus,
         runtimeUrlConfigured: Boolean(runtimeUrl),
         migrationUrlConfigured: Boolean(migrationUrl),
       },

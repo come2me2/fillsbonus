@@ -55,6 +55,18 @@ export function getMigrationDatabaseUrl(): string | undefined {
 }
 
 function getRegisterErrorMessage(error: unknown): { message: string; status: number } {
+  if (
+    error instanceof Error &&
+    (error.message.includes("Database URL is not configured") ||
+      error.message.includes("connect Supabase"))
+  ) {
+    return {
+      message:
+        "База данных не подключена. Проверьте интеграцию Supabase в Vercel и сделайте redeploy.",
+      status: 500,
+    };
+  }
+
   if (error instanceof Error && error.message.includes("AUTH_SECRET")) {
     return {
       message: "AUTH_SECRET не настроен на сервере",
