@@ -64,7 +64,7 @@ export function BalanceActions({ balance }: { balance: number }) {
         <button
           type="submit"
           disabled={loading !== null || balance <= 0}
-          className="mt-4 rounded-full bg-brand px-5 py-2 text-white disabled:opacity-50"
+          className="btn-pill mt-4 rounded-full bg-brand px-5 py-2 text-center text-white disabled:opacity-50"
         >
           Отправить запрос
         </button>
@@ -72,7 +72,7 @@ export function BalanceActions({ balance }: { balance: number }) {
 
       <form onSubmit={handleSpend} className="rounded-3xl border border-border bg-card p-6">
         <h3 className="text-lg font-medium">Использовать на заказ</h3>
-        <p className="mt-2 text-sm text-muted">Списать баланс на покупку мебели Fils</p>
+        <p className="mt-2 text-sm text-muted">Списать баланс на покупку мебели FILLS</p>
         <input
           name="amount"
           type="number"
@@ -92,7 +92,7 @@ export function BalanceActions({ balance }: { balance: number }) {
         <button
           type="submit"
           disabled={loading !== null || balance <= 0}
-          className="mt-4 rounded-full bg-brand px-5 py-2 text-white disabled:opacity-50"
+          className="btn-pill mt-4 rounded-full bg-brand px-5 py-2 text-center text-white disabled:opacity-50"
         >
           Отправить заявку
         </button>

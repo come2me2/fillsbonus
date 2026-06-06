@@ -39,7 +39,7 @@ export default async function AdminPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
-      <h1 className="text-3xl font-semibold text-brand-dark">Админка Fils Bonus</h1>
+      <h1 className="text-3xl font-semibold text-brand-dark">Админка FILLS Bonus</h1>
       <p className="mt-2 text-muted">
         Подтверждайте статусы заказов, начисляйте бонусы и обрабатывайте заявки на вывод.
       </p>

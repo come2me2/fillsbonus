@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fils Bonus — реферальная программа",
+  title: "FILLS Bonus — реферальная программа",
   description:
-    "Приводите друзей в Fils и получайте до 10% от оплаченного заказа на бонусный баланс.",
+    "Приводите друзей в FILLS и получайте до 10% от оплаченного заказа на бонусный баланс.",
 };
 
 export const dynamic = "force-dynamic";

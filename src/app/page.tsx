@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const steps = [
   "Зарегистрируйтесь и получите персональную ссылку и промокод",
-  "Поделитесь ими с друзьями, которые планируют заказать мебель Fils",
+  "Поделитесь ими с друзьями, которые планируют заказать мебель FILLS",
   "После оплаты и доставки заказа бонус начисляется на ваш баланс",
 ];
 
@@ -17,25 +17,25 @@ export default function HomePage() {
     <div className="mx-auto max-w-6xl px-6 py-16">
       <section className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
         <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-accent">Fils Referral Program</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-accent">FILLS Referral Program</p>
           <h1 className="mt-4 text-4xl font-semibold leading-tight text-brand-dark md:text-5xl">
             Приводите друзей — получайте до 10% от оплаченного заказа
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-muted">
-            Реферальная программа Fils для клиентов и партнёров. Делитесь ссылкой или
+            Реферальная программа FILLS для клиентов и партнёров. Делитесь ссылкой или
             промокодом, а после доставки заказа бонус поступает на ваш баланс. Его можно
             потратить на мебель или запросить вывод.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/register"
-              className="rounded-full bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark"
+              className="btn-pill rounded-full bg-brand px-5 py-3 text-center font-medium text-white hover:bg-brand-dark sm:px-6"
             >
               Стать участником
             </Link>
             <Link
               href="/login"
-              className="rounded-full border border-border px-6 py-3 font-medium text-brand"
+              className="btn-pill rounded-full border border-border px-5 py-3 text-center font-medium text-brand sm:px-6"
             >
               Войти в кабинет
             </Link>
@@ -71,7 +71,7 @@ export default function HomePage() {
         <h2 className="text-2xl font-medium">Как работает бонусный баланс</h2>
         <p className="mt-4 max-w-3xl text-white/80">
           Бонус начисляется только после того, как заказ полностью оплачен и доставлен.
-          Дальше вы сами решаете: использовать баланс на следующий заказ Fils или
+          Дальше вы сами решаете: использовать баланс на следующий заказ FILLS или
           отправить запрос на вывод средств.
         </p>
       </section>

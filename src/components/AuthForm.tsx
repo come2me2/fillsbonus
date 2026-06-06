@@ -89,7 +89,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-full bg-brand px-4 py-3 font-medium text-white hover:bg-brand-dark disabled:opacity-60"
+        className="btn-pill w-full rounded-full bg-brand px-4 py-3 text-center font-medium text-white hover:bg-brand-dark disabled:opacity-60"
       >
         {loading ? "Загрузка..." : mode === "login" ? "Войти" : "Зарегистрироваться"}
       </button>
