@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ReferralStatus {
+  LEAD
+  IN_PROGRESS
+  PAID
+  DELIVERED
+  BONUS_ACCRUED
+  REJECTED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  DELIVERED
+  BONUS_ACCRUED
+}
+
+enum TransactionType {
+  ACCRUAL
+  SPEND
+  WITHDRAWAL_REQUEST
+  WITHDRAWAL_PAID
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  REJECTED
+}
+
+enum ReferralSource {
+  LINK
+  CODE
+  MANUAL
+}
+
+model User {
+  id               String        @id @default(cuid())
+  name             String
+  phone            String        @unique
+  email            String        @unique
+  passwordHash     String
+  refCode          String        @unique
+  successfulOrders Int           @default(0)
+  bonusBalance     Decimal       @default(0) @db.Decimal(12, 2)
+  isAdmin          Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  referrals        Referral[]
+  transactions     Transaction[]
+}
+
+model Referral {
+  id           String         @id @default(cuid())
+  referrerId   String
+  referrer     User           @relation(fields: [referrerId], references: [id], onDelete: Cascade)
+  clientName   String
+  clientPhone  String
+  clientEmail  String?
+  source       ReferralSource @default(LINK)
+  status       ReferralStatus @default(LEAD)
+  notes        String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  order        Order?
+
+  @@index([clientPhone])
+  @@index([referrerId])
+  @@index([status])
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  referralId    String      @unique
+  referral      Referral    @relation(fields: [referralId], references: [id], onDelete: Cascade)
+  amount        Decimal     @default(0) @db.Decimal(12, 2)
+  status        OrderStatus @default(PENDING)
+  bonusPercent  Decimal?    @db.Decimal(5, 2)
+  bonusAmount   Decimal?    @db.Decimal(12, 2)
+  paidAt        DateTime?
+  deliveredAt   DateTime?
+  bonusAccruedAt DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  transactions  Transaction[]
+}
+
+model Transaction {
+  id        String            @id @default(cuid())
+  userId    String
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderId   String?
+  order     Order?            @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  type      TransactionType
+  amount    Decimal           @db.Decimal(12, 2)
+  status    TransactionStatus @default(PENDING)
+  details   String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+}

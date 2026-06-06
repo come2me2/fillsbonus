@@ -1,0 +1,20 @@
+import Link from "next/link";
+import { AuthForm } from "@/components/AuthForm";
+
+export default function LoginPage() {
+  return (
+    <div className="mx-auto flex max-w-md flex-col px-6 py-16">
+      <h1 className="text-3xl font-semibold text-brand-dark">Вход</h1>
+      <p className="mt-2 text-muted">Войдите в личный кабинет реферальной программы Fils</p>
+      <div className="mt-8">
+        <AuthForm mode="login" />
+      </div>
+      <p className="mt-6 text-sm text-muted">
+        Нет аккаунта?{" "}
+        <Link href="/register" className="text-brand underline">
+          Зарегистрироваться
+        </Link>
+      </p>
+    </div>
+  );
+}
