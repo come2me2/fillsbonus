@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { AdminPanel } from "@/components/AdminPanel";
+import { SeedMockButton } from "@/components/SeedMockButton";
 
 export default async function AdminPage() {
   const user = await getSessionUser();
@@ -42,6 +43,8 @@ export default async function AdminPage() {
       <p className="mt-2 text-muted">
         Подтверждайте статусы заказов, начисляйте бонусы и обрабатывайте заявки на вывод.
       </p>
+
+      <SeedMockButton />
 
       <section className="mt-8 rounded-3xl border border-border bg-card p-6">
         <h2 className="text-xl font-medium">Рефереры</h2>

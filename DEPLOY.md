@@ -120,14 +120,25 @@ https://bonus.fillsdesign.ru/tilda-ref-tracker.js
 6. Указать сумму → «Оплачен» → «Доставлен → начислить бонус»
 7. Проверить баланс в `/dashboard`
 
-## 8. Локальный запуск
+## Локальный запуск
 
 ```bash
 cp .env.example .env
 # заполните DATABASE_URL и AUTH_SECRET
 npm install
 npx prisma migrate dev
+npm run db:seed
 npm run dev
 ```
+
+### Демо-данные
+
+Команда `npm run db:seed` создаёт mock-данные для `info@filsdesign.ru`:
+
+- пароль по умолчанию: `Fils2024!`
+- баланс, рефералы, транзакции для кабинета
+- заявки и рефереры для админки
+
+На production: войдите в `/admin` и нажмите **«Загрузить mock-данные»**.
 
 Приложение: [http://localhost:3000](http://localhost:3000)
