@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { calculateClientDiscount } from "@/lib/bonus";
 import { PrismaClient } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
@@ -6,6 +7,18 @@ const ADMIN_EMAIL = "info@filsdesign.ru";
 const MOCK_REFERRER_EMAILS = ["elena.mock@fillsdesign.ru", "alex.mock@fillsdesign.ru"] as const;
 
 export const SEED_DEFAULT_PASSWORD = "Fils2024!";
+
+function discountedOrder(finalAmount: number) {
+  const quoteAmount = Math.round(finalAmount / 0.95);
+  const { percent, discount, finalAmount: amount } = calculateClientDiscount(quoteAmount);
+
+  return {
+    quoteAmount,
+    clientDiscountPercent: percent,
+    clientDiscountAmount: discount,
+    amount,
+  };
+}
 
 async function clearMockData(client: PrismaClient) {
   const mockUsers = await client.user.findMany({
@@ -107,7 +120,7 @@ export async function seedMockData(
       notes: "MOCK: первый успешный заказ",
       order: {
         create: {
-          amount: 500000,
+          ...discountedOrder(500000),
           status: "BONUS_ACCRUED",
           bonusPercent: 5,
           bonusAmount: 25000,
@@ -131,7 +144,7 @@ export async function seedMockData(
       notes: "MOCK: второй успешный заказ",
       order: {
         create: {
-          amount: 680000,
+          ...discountedOrder(680000),
           status: "BONUS_ACCRUED",
           bonusPercent: 7,
           bonusAmount: 47600,
@@ -200,13 +213,17 @@ export async function seedMockData(
   for (const referral of referralsNeedingOrders) {
     if (referral.clientPhone === "79990001004") {
       await client.order.create({
-        data: { referralId: referral.id, amount: 420000, status: "PENDING" },
+        data: {
+          referralId: referral.id,
+          ...discountedOrder(420000),
+          status: "PENDING",
+        },
       });
     } else if (referral.clientPhone === "79990001005") {
       await client.order.create({
         data: {
           referralId: referral.id,
-          amount: 390000,
+          ...discountedOrder(390000),
           status: "PAID",
           paidAt: new Date("2026-05-28T11:00:00.000Z"),
         },
@@ -215,7 +232,7 @@ export async function seedMockData(
       await client.order.create({
         data: {
           referralId: referral.id,
-          amount: 370000,
+          ...discountedOrder(370000),
           status: "DELIVERED",
           paidAt: new Date("2026-05-10T10:00:00.000Z"),
           deliveredAt: new Date("2026-05-24T15:00:00.000Z"),

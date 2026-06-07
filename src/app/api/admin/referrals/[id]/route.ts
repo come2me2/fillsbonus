@@ -3,7 +3,8 @@ import { ReferralStatus } from "@/generated/prisma/client";
 import { requireAdminUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { accrueBonusForReferral } from "@/lib/referrals";
-import { orderAmountSchema } from "@/lib/validation";
+import { calculateClientDiscount } from "@/lib/bonus";
+import { quoteAmountSchema } from "@/lib/validation";
 import { notifyBonusAccrued } from "@/lib/email";
 import { ZodError } from "zod";
 
@@ -28,11 +29,17 @@ export async function PATCH(request: Request, context: RouteContext) {
     }
 
     if (action === "set_amount") {
-      const { amount } = orderAmountSchema.parse(body);
+      const { quoteAmount } = quoteAmountSchema.parse(body);
+      const { percent, discount, finalAmount } = calculateClientDiscount(quoteAmount);
 
       const updated = await prisma.order.update({
         where: { id: referral.order.id },
-        data: { amount },
+        data: {
+          quoteAmount,
+          clientDiscountPercent: percent,
+          clientDiscountAmount: discount,
+          amount: finalAmount,
+        },
       });
 
       return NextResponse.json({ ok: true, order: updated });

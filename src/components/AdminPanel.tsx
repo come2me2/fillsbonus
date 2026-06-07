@@ -2,6 +2,15 @@
 
 import { FormEvent, useState } from "react";
 import { StatusBadge } from "@/components/StatusBadge";
+import { CLIENT_DISCOUNT_PERCENT } from "@/lib/bonus";
+
+type Order = {
+  amount: string | number;
+  quoteAmount?: string | number | null;
+  clientDiscountPercent?: string | number | null;
+  clientDiscountAmount?: string | number | null;
+  bonusAmount?: string | number | null;
+};
 
 type Referral = {
   id: string;
@@ -10,8 +19,16 @@ type Referral = {
   status: string;
   createdAt: string;
   referrer: { name: string; refCode: string };
-  order: { amount: string | number; bonusAmount?: string | number | null } | null;
+  order: Order | null;
 };
+
+function previewClientDiscount(quoteAmount: number) {
+  const discount = Math.round((quoteAmount * CLIENT_DISCOUNT_PERCENT) / 100);
+  return {
+    discount,
+    finalAmount: quoteAmount - discount,
+  };
+}
 
 export function AdminPanel({
   initialReferrals,
@@ -76,7 +93,7 @@ export function AdminPanel({
     const formData = new FormData(event.currentTarget);
     void updateReferral(id, {
       action: "set_amount",
-      amount: formData.get("amount"),
+      quoteAmount: formData.get("quoteAmount"),
     });
   }
 
@@ -86,71 +103,120 @@ export function AdminPanel({
 
       <section className="rounded-3xl border border-border bg-card p-6">
         <h2 className="text-xl font-medium">Заявки и заказы</h2>
+        <p className="mt-2 text-sm text-muted">
+          Приглашённый клиент получает скидку {CLIENT_DISCOUNT_PERCENT}% от суммы сметы. Бонус рефереру
+          начисляется с суммы к оплате после скидки.
+        </p>
         <div className="mt-6 space-y-4">
-          {referrals.map((referral) => (
-            <div key={referral.id} className="rounded-2xl border border-border p-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="font-medium">{referral.clientName}</p>
-                  <p className="text-sm text-muted">{referral.clientPhone}</p>
-                  <p className="text-sm text-muted">
-                    Реферер: {referral.referrer.name} ({referral.referrer.refCode})
-                  </p>
-                </div>
-                <StatusBadge status={referral.status} />
-              </div>
+          {referrals.map((referral) => {
+            const order = referral.order;
+            const defaultQuote =
+              Number(order?.quoteAmount ?? 0) ||
+              (order?.clientDiscountAmount
+                ? Number(order.amount) + Number(order.clientDiscountAmount)
+                : Number(order?.amount ?? 0)) ||
+              undefined;
 
-              <form
-                onSubmit={(event) => handleAmountSubmit(referral.id, event)}
-                className="mt-4 flex flex-wrap items-end gap-3"
-              >
-                <div>
-                  <label className="mb-1 block text-xs text-muted">Сумма сметы, ₽</label>
-                  <input
-                    name="amount"
-                    type="number"
-                    min={1}
-                    defaultValue={Number(referral.order?.amount ?? 0) || undefined}
-                    className="rounded-xl border border-border px-3 py-2"
-                  />
+            return (
+              <div key={referral.id} className="rounded-2xl border border-border p-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="font-medium">{referral.clientName}</p>
+                    <p className="text-sm text-muted">{referral.clientPhone}</p>
+                    <p className="text-sm text-muted">
+                      Реферер: {referral.referrer.name} ({referral.referrer.refCode})
+                    </p>
+                  </div>
+                  <StatusBadge status={referral.status} />
                 </div>
-                <button type="submit" className="rounded-full bg-brand px-4 py-2 text-sm text-white">
-                  Сохранить сумму
-                </button>
-              </form>
 
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => updateReferral(referral.id, { action: "set_status", status: "IN_PROGRESS" })}
-                  className="rounded-full border border-border px-4 py-2 text-sm"
+                {order?.quoteAmount ? (
+                  <div className="mt-4 grid gap-2 rounded-2xl bg-muted/30 p-4 text-sm sm:grid-cols-3">
+                    <div>
+                      <p className="text-muted">Смета</p>
+                      <p className="font-medium">{Number(order.quoteAmount).toLocaleString("ru-RU")} ₽</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Скидка клиенту {CLIENT_DISCOUNT_PERCENT}%</p>
+                      <p className="font-medium text-green-700">
+                        −{Number(order.clientDiscountAmount ?? 0).toLocaleString("ru-RU")} ₽
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted">К оплате</p>
+                      <p className="font-medium">{Number(order.amount).toLocaleString("ru-RU")} ₽</p>
+                    </div>
+                  </div>
+                ) : null}
+
+                <form
+                  onSubmit={(event) => handleAmountSubmit(referral.id, event)}
+                  className="mt-4 flex flex-wrap items-end gap-3"
                 >
-                  В работе
-                </button>
-                <button
-                  type="button"
-                  onClick={() => updateReferral(referral.id, { action: "set_status", status: "PAID" })}
-                  className="rounded-full border border-border px-4 py-2 text-sm"
-                >
-                  Оплачен
-                </button>
-                <button
-                  type="button"
-                  onClick={() => updateReferral(referral.id, { action: "set_status", status: "DELIVERED" })}
-                  className="rounded-full bg-brand px-4 py-2 text-sm text-white"
-                >
-                  Доставлен → начислить бонус
-                </button>
-                <button
-                  type="button"
-                  onClick={() => updateReferral(referral.id, { action: "reject" })}
-                  className="rounded-full border border-red-200 px-4 py-2 text-sm text-red-700"
-                >
-                  Отклонить
-                </button>
+                  <div>
+                    <label className="mb-1 block text-xs text-muted">Сумма сметы до скидки, ₽</label>
+                    <input
+                      name="quoteAmount"
+                      type="number"
+                      min={1}
+                      defaultValue={defaultQuote}
+                      className="rounded-xl border border-border px-3 py-2"
+                      onChange={(event) => {
+                        const value = Number(event.currentTarget.value);
+                        const preview = event.currentTarget.form?.querySelector(
+                          `[data-preview-for="${referral.id}"]`,
+                        );
+                        if (!preview || !value) {
+                          if (preview) preview.textContent = "";
+                          return;
+                        }
+                        const { discount, finalAmount } = previewClientDiscount(value);
+                        preview.textContent = `Скидка ${CLIENT_DISCOUNT_PERCENT}%: −${discount.toLocaleString("ru-RU")} ₽ → к оплате ${finalAmount.toLocaleString("ru-RU")} ₽`;
+                      }}
+                    />
+                    <p
+                      data-preview-for={referral.id}
+                      className="mt-1 text-xs text-muted"
+                    />
+                  </div>
+                  <button type="submit" className="rounded-full bg-brand px-4 py-2 text-sm text-white">
+                    Сохранить смету
+                  </button>
+                </form>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => updateReferral(referral.id, { action: "set_status", status: "IN_PROGRESS" })}
+                    className="rounded-full border border-border px-4 py-2 text-sm"
+                  >
+                    В работе
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updateReferral(referral.id, { action: "set_status", status: "PAID" })}
+                    className="rounded-full border border-border px-4 py-2 text-sm"
+                  >
+                    Оплачен
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updateReferral(referral.id, { action: "set_status", status: "DELIVERED" })}
+                    className="rounded-full bg-brand px-4 py-2 text-sm text-white"
+                  >
+                    Доставлен → начислить бонус
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updateReferral(referral.id, { action: "reject" })}
+                    className="rounded-full border border-red-200 px-4 py-2 text-sm text-red-700"
+                  >
+                    Отклонить
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

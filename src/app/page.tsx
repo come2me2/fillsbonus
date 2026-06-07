@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const steps = [
   "Зарегистрируйтесь и получите персональную ссылку и промокод",
-  "Поделитесь ими с друзьями, которые планируют заказать мебель FILLS",
+  "Поделитесь ими с друзьями — они получат скидку 5% на заказ мебели FILLS",
   "После оплаты и доставки заказа бонус начисляется на ваш баланс",
 ];
 
@@ -23,8 +23,8 @@ export default function HomePage() {
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-muted">
             Реферальная программа FILLS для клиентов и партнёров. Делитесь ссылкой или
-            промокодом, а после доставки заказа бонус поступает на ваш баланс. Его можно
-            потратить на мебель или запросить вывод.
+            промокодом — ваш друг получит скидку 5%, а после доставки заказа бонус поступит на
+            ваш баланс. Его можно потратить на мебель или запросить вывод.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
@@ -43,8 +43,12 @@ export default function HomePage() {
         </div>
 
         <div className="rounded-[2rem] border border-border bg-card p-8 shadow-sm">
-          <h2 className="text-xl font-medium">Ступени вознаграждения</h2>
+          <h2 className="text-xl font-medium">Условия программы</h2>
           <div className="mt-6 space-y-4">
+            <div className="flex items-center justify-between rounded-2xl border border-border px-4 py-3">
+              <span className="text-sm text-muted">Скидка приглашённому другу</span>
+              <span className="text-2xl font-semibold text-brand">5%</span>
+            </div>
             {tiers.map((tier) => (
               <div
                 key={tier.label}

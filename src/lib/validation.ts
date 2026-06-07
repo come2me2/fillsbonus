@@ -16,6 +16,10 @@ export const orderAmountSchema = z.object({
   amount: z.coerce.number().positive("Сумма должна быть больше 0"),
 });
 
+export const quoteAmountSchema = z.object({
+  quoteAmount: z.coerce.number().positive("Сумма сметы должна быть больше 0"),
+});
+
 export const withdrawalSchema = z.object({
   amount: z.coerce.number().positive("Сумма должна быть больше 0"),
   details: z.string().min(5, "Укажите реквизиты для выплаты"),

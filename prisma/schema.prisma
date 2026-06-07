@@ -78,19 +78,22 @@ model Referral {
 }
 
 model Order {
-  id            String      @id @default(cuid())
-  referralId    String      @unique
-  referral      Referral    @relation(fields: [referralId], references: [id], onDelete: Cascade)
-  amount        Decimal     @default(0) @db.Decimal(12, 2)
-  status        OrderStatus @default(PENDING)
-  bonusPercent  Decimal?    @db.Decimal(5, 2)
-  bonusAmount   Decimal?    @db.Decimal(12, 2)
-  paidAt        DateTime?
-  deliveredAt   DateTime?
-  bonusAccruedAt DateTime?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  transactions  Transaction[]
+  id                   String      @id @default(cuid())
+  referralId           String      @unique
+  referral             Referral    @relation(fields: [referralId], references: [id], onDelete: Cascade)
+  quoteAmount          Decimal?    @db.Decimal(12, 2)
+  clientDiscountPercent Decimal?   @db.Decimal(5, 2)
+  clientDiscountAmount Decimal?    @db.Decimal(12, 2)
+  amount               Decimal     @default(0) @db.Decimal(12, 2)
+  status               OrderStatus @default(PENDING)
+  bonusPercent         Decimal?    @db.Decimal(5, 2)
+  bonusAmount          Decimal?    @db.Decimal(12, 2)
+  paidAt               DateTime?
+  deliveredAt          DateTime?
+  bonusAccruedAt       DateTime?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+  transactions         Transaction[]
 }
 
 model Transaction {

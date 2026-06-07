@@ -1,4 +1,5 @@
 export const TIER_PERCENTS = [5, 7, 10] as const;
+export const CLIENT_DISCOUNT_PERCENT = 5;
 
 export function getBonusPercent(successfulOrders: number): number {
   if (successfulOrders <= 0) return TIER_PERCENTS[0];
@@ -44,6 +45,18 @@ export function calculateBonusAmount(amount: number, successfulOrders: number): 
   const bonus = Math.round((amount * percent) / 100);
 
   return { percent, bonus };
+}
+
+export function calculateClientDiscount(quoteAmount: number): {
+  percent: number;
+  discount: number;
+  finalAmount: number;
+} {
+  const percent = CLIENT_DISCOUNT_PERCENT;
+  const discount = Math.round((quoteAmount * percent) / 100);
+  const finalAmount = quoteAmount - discount;
+
+  return { percent, discount, finalAmount };
 }
 
 export function formatMoney(amount: number | string): string {

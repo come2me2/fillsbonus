@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { getReferralLink } from "@/lib/ref-code";
-import { formatMoney, getNextTierInfo } from "@/lib/bonus";
+import { getReferralLink, getClientDiscountLink } from "@/lib/ref-code";
+import { formatMoney, getNextTierInfo, CLIENT_DISCOUNT_PERCENT } from "@/lib/bonus";
 import { CopyButton } from "@/components/CopyButton";
 import { StatusBadge } from "@/components/StatusBadge";
 import { BalanceActions } from "@/components/BalanceActions";
@@ -17,6 +17,7 @@ export default async function DashboardPage() {
 
   const tier = getNextTierInfo(user.successfulOrders);
   const referralLink = getReferralLink(user.refCode);
+  const clientDiscountLink = getClientDiscountLink(user.refCode);
 
   const [referrals, transactions] = await Promise.all([
     prisma.referral.findMany({
@@ -47,9 +48,14 @@ export default async function DashboardPage() {
       <section className="mt-10 grid gap-6 lg:grid-cols-2">
         <div className="rounded-3xl border border-border bg-card p-6">
           <h2 className="text-lg font-medium">Ваша реферальная ссылка</h2>
+          <p className="mt-2 text-sm text-muted">
+            Друзья получают скидку {CLIENT_DISCOUNT_PERCENT}% на заказ при переходе по ссылке или
+            промокоду.
+          </p>
           <p className="mt-3 break-all rounded-2xl bg-white px-4 py-3 text-sm">{referralLink}</p>
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap gap-3">
             <CopyButton value={referralLink} label="Копировать ссылку" />
+            <CopyButton value={clientDiscountLink} label="Ссылка со скидкой для друга" />
           </div>
         </div>
 
@@ -77,14 +83,15 @@ export default async function DashboardPage() {
                 <th className="px-4 py-3">Клиент</th>
                 <th className="px-4 py-3">Телефон</th>
                 <th className="px-4 py-3">Статус</th>
-                <th className="px-4 py-3">Сумма</th>
+                <th className="px-4 py-3">К оплате</th>
+                <th className="px-4 py-3">Скидка другу</th>
                 <th className="px-4 py-3">Бонус</th>
               </tr>
             </thead>
             <tbody>
               {referrals.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-muted">
+                  <td colSpan={6} className="px-4 py-8 text-muted">
                     Пока нет приведённых клиентов. Поделитесь ссылкой или промокодом.
                   </td>
                 </tr>
@@ -99,6 +106,11 @@ export default async function DashboardPage() {
                     <td className="px-4 py-3">
                       {Number(referral.order?.amount ?? 0) > 0
                         ? formatMoney(Number(referral.order?.amount))
+                        : "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      {referral.order?.clientDiscountAmount
+                        ? formatMoney(Number(referral.order.clientDiscountAmount))
                         : "—"}
                     </td>
                     <td className="px-4 py-3">
