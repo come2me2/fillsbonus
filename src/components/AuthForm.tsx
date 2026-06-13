@@ -20,6 +20,8 @@ export function AuthForm({ mode }: AuthFormProps) {
 
     const formData = new FormData(event.currentTarget);
     const payload = Object.fromEntries(formData.entries());
+    if (typeof payload.email === "string") payload.email = payload.email.trim();
+    if (typeof payload.password === "string") payload.password = payload.password.trim();
     const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
 
     const response = await fetch(endpoint, {

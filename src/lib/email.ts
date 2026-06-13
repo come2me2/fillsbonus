@@ -1,12 +1,15 @@
+import { sendTelegram } from "@/lib/telegram";
+
 export async function sendAdminNotification(subject: string, body: string) {
   const adminEmail = process.env.ADMIN_EMAIL;
 
   if (!adminEmail) {
     console.info("[email:admin]", subject, body);
-    return;
+  } else {
+    console.info("[email:admin]", adminEmail, subject, body);
   }
 
-  console.info("[email:admin]", adminEmail, subject, body);
+  await sendTelegram(`<b>${subject}</b>\n\n${body}`);
 }
 
 export async function sendReferrerNotification(
@@ -39,6 +42,11 @@ export async function notifyBonusAccrued(params: {
     params.email,
     "Начислен бонус Fils",
     `${params.name}, на ваш баланс начислено ${params.amount} ₽ (${params.percent}%).`,
+  );
+
+  await sendAdminNotification(
+    "Начислен бонус Fils",
+    `${params.name}: ${params.amount.toLocaleString("ru-RU")} ₽ (${params.percent}%)`,
   );
 }
 

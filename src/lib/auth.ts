@@ -21,7 +21,7 @@ async function generateUniqueRefCode(): Promise<string> {
 export async function registerUser(input: unknown) {
   const data = registerSchema.parse(input);
   const phone = normalizePhone(data.phone);
-  const passwordHash = await bcrypt.hash(data.password, 12);
+  const passwordHash = await bcrypt.hash(data.password.trim(), 12);
   const refCode = await generateUniqueRefCode();
 
   const adminEmails = (process.env.ADMIN_EMAILS ?? "")
@@ -49,16 +49,18 @@ export async function registerUser(input: unknown) {
 
 export async function loginUser(input: unknown) {
   const data = loginSchema.parse(input);
+  const email = data.email.trim().toLowerCase();
+  const password = data.password.trim();
 
   const user = await prisma.user.findUnique({
-    where: { email: data.email.trim().toLowerCase() },
+    where: { email },
   });
 
   if (!user) {
     throw new Error("INVALID_CREDENTIALS");
   }
 
-  const valid = await bcrypt.compare(data.password, user.passwordHash);
+  const valid = await bcrypt.compare(password, user.passwordHash);
 
   if (!valid) {
     throw new Error("INVALID_CREDENTIALS");

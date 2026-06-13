@@ -186,13 +186,18 @@ export function extractTildaLead(payload: TildaPayload) {
   const refCode =
     pickField(payload, [
       "ref_code",
+      "ref code",
+      "Ref code",
+      "Ref_code",
       "ref",
       "promo",
       "promocode",
       "Промокод",
       "promo_code",
       "promoCode",
-    ]) ?? "";
+    ]) ??
+    findRefCodeByHeuristic(payload) ??
+    "";
 
   const notes =
     pickField(payload, ["comment", "message", "Комментарий", "formname", "comments"]) ??

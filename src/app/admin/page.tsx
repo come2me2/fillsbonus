@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { AdminPanel } from "@/components/AdminPanel";
+import { AdminStats } from "@/components/AdminStats";
 import { SeedMockButton } from "@/components/SeedMockButton";
 
 export default async function AdminPage() {
@@ -45,6 +46,8 @@ export default async function AdminPage() {
       </p>
 
       <SeedMockButton />
+
+      <AdminStats referrals={JSON.parse(JSON.stringify(referrals))} />
 
       <section className="mt-8 rounded-3xl border border-border bg-card p-6">
         <h2 className="text-xl font-medium">Рефереры</h2>

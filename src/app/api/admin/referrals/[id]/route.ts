@@ -32,7 +32,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       const { quoteAmount } = quoteAmountSchema.parse(body);
       const { percent, discount, finalAmount } = calculateClientDiscount(quoteAmount);
 
-      const updated = await prisma.order.update({
+      await prisma.order.update({
         where: { id: referral.order.id },
         data: {
           quoteAmount,
@@ -42,7 +42,22 @@ export async function PATCH(request: Request, context: RouteContext) {
         },
       });
 
-      return NextResponse.json({ ok: true, order: updated });
+      const updatedReferral = await prisma.referral.findUnique({
+        where: { id },
+        include: { order: true, referrer: true },
+      });
+
+      return NextResponse.json({ ok: true, referral: updatedReferral });
+    }
+
+    if (action === "set_notes") {
+      const updatedReferral = await prisma.referral.update({
+        where: { id },
+        data: { notes: body.notes ?? "" },
+        include: { order: true, referrer: true },
+      });
+
+      return NextResponse.json({ ok: true, referral: updatedReferral });
     }
 
     if (action === "set_status") {
@@ -104,6 +119,7 @@ export async function PATCH(request: Request, context: RouteContext) {
           status: ReferralStatus.REJECTED,
           notes: body.notes ?? referral.notes,
         },
+        include: { order: true, referrer: true },
       });
 
       return NextResponse.json({ ok: true, referral: updated });
