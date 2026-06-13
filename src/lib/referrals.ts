@@ -112,10 +112,7 @@ export async function accrueBonusForReferral(referralId: string) {
       throw new Error("Order amount is required");
     }
 
-    const { percent, bonus } = calculateBonusAmount(
-      amount,
-      referral.referrer.successfulOrders,
-    );
+    const { percent, bonus } = calculateBonusAmount(amount);
 
     await tx.order.update({
       where: { id: referral.order.id },

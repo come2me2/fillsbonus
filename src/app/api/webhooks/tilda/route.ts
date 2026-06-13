@@ -3,6 +3,8 @@ import { ReferralSource } from "@/generated/prisma/client";
 import { createReferralLead, findReferrerByCode } from "@/lib/referrals";
 import {
   extractTildaLead,
+  getPayloadFieldNames,
+  isTildaWebhookTest,
   parseTildaPayload,
   verifyTildaWebhook,
 } from "@/lib/tilda";
@@ -26,10 +28,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: "Invalid webhook secret" }, { status: 401 });
     }
 
+    if (isTildaWebhookTest(payload)) {
+      return NextResponse.json({ ok: true, test: true });
+    }
+
     const lead = extractTildaLead(payload);
 
     if (!lead.clientPhone) {
-      return NextResponse.json({ ok: false, error: "Phone is required" }, { status: 400 });
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "Phone is required",
+          receivedFields: getPayloadFieldNames(payload),
+          hint: "Укажите у поля телефона в Tilda имя переменной Phone или phone",
+        },
+        { status: 400 },
+      );
     }
 
     if (!lead.refCode) {

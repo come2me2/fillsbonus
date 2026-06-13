@@ -53,6 +53,11 @@
       form.appendChild(input);
     }
     input.value = code;
+
+    var promoInput = form.querySelector('input[name="promo_code"]');
+    if (promoInput && !promoInput.value) {
+      promoInput.value = code;
+    }
   }
 
   function attachToForms(code) {

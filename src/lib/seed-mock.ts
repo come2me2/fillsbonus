@@ -55,7 +55,7 @@ export async function seedMockData(
       refCode: "FILSADMN",
       isAdmin: true,
       successfulOrders: 2,
-      bonusBalance: 47600,
+      bonusBalance: 59000,
     },
     create: {
       name: "Ирина Fils",
@@ -65,7 +65,7 @@ export async function seedMockData(
       refCode: "FILSADMN",
       isAdmin: true,
       successfulOrders: 2,
-      bonusBalance: 47600,
+      bonusBalance: 59000,
     },
   });
 
@@ -146,8 +146,8 @@ export async function seedMockData(
         create: {
           ...discountedOrder(680000),
           status: "BONUS_ACCRUED",
-          bonusPercent: 7,
-          bonusAmount: 47600,
+          bonusPercent: 5,
+          bonusAmount: 34000,
           paidAt: new Date("2026-04-05T12:00:00.000Z"),
           deliveredAt: new Date("2026-04-20T14:00:00.000Z"),
           bonusAccruedAt: new Date("2026-04-21T09:00:00.000Z"),
@@ -259,9 +259,9 @@ export async function seedMockData(
         userId: admin.id,
         orderId: sergeyReferral.order!.id,
         type: "ACCRUAL",
-        amount: 47600,
+        amount: 34000,
         status: "COMPLETED",
-        details: "Бонус 7% за заказ клиента Сергей Волков",
+        details: "Бонус 5% за заказ клиента Сергей Волков",
       },
       {
         userId: admin.id,

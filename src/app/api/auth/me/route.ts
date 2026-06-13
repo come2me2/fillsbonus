@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/session";
 import { getReferralLink } from "@/lib/ref-code";
-import { getNextTierInfo } from "@/lib/bonus";
+import { CLIENT_DISCOUNT_PERCENT, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -10,14 +10,13 @@ export async function GET() {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
-  const tier = getNextTierInfo(user.successfulOrders);
-
   return NextResponse.json({
     ok: true,
     user: {
       ...user,
       referralLink: getReferralLink(user.refCode),
-      tier,
+      referrerBonusPercent: REFERRER_BONUS_PERCENT,
+      clientDiscountPercent: CLIENT_DISCOUNT_PERCENT,
     },
   });
 }

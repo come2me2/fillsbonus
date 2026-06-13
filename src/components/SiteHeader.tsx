@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getSessionUser } from "@/lib/session";
 import { LogoutButton } from "@/components/LogoutButton";
+import { FillsLogo } from "@/components/FillsLogo";
 
 export async function SiteHeader() {
   const user = await getSessionUser();
@@ -8,20 +9,15 @@ export async function SiteHeader() {
   return (
     <header className="border-b border-border bg-card/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
-        <Link
-          href="/"
-          className="shrink-0 text-base font-semibold tracking-[0.12em] text-brand sm:text-lg sm:tracking-[0.2em]"
-        >
-          FILLS BONUS
-        </Link>
+        <FillsLogo />
         <nav className="flex shrink-0 items-center gap-2 text-sm sm:gap-4">
           {user ? (
             <>
-              <Link href="/dashboard" className="text-muted hover:text-brand">
+              <Link href="/dashboard" className="text-muted transition hover:text-accent">
                 Кабинет
               </Link>
               {user.isAdmin ? (
-                <Link href="/admin" className="text-muted hover:text-brand">
+                <Link href="/admin" className="text-muted transition hover:text-accent">
                   Админка
                 </Link>
               ) : null}
@@ -29,7 +25,7 @@ export async function SiteHeader() {
             </>
           ) : (
             <>
-              <Link href="/login" className="text-muted hover:text-brand">
+              <Link href="/login" className="text-muted transition hover:text-accent">
                 Войти
               </Link>
               <Link

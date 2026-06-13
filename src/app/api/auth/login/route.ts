@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { loginUser } from "@/lib/auth";
+import { getRegisterErrorMessage } from "@/lib/database-url";
 import { ZodError } from "zod";
 
 export async function POST(request: Request) {
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
         name: user.name,
         email: user.email,
         refCode: user.refCode,
+        isAdmin: user.isAdmin,
       },
     });
   } catch (error) {
@@ -31,9 +33,10 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json(
-      { ok: false, error: "Не удалось войти" },
-      { status: 500 },
-    );
+    const { message, status } = getRegisterErrorMessage(error);
+    const errorMessage =
+      message === "Не удалось зарегистрироваться" ? "Не удалось войти" : message;
+
+    return NextResponse.json({ ok: false, error: errorMessage }, { status });
   }
 }

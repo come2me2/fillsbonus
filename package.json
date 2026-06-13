@@ -12,7 +12,10 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "db:ensure-admin": "tsx scripts/ensure-admin.ts",
+    "check:infra": "node scripts/check-infra.mjs",
+    "test:tilda-webhook": "node scripts/tilda-e2e-test.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

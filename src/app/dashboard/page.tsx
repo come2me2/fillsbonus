@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { getReferralLink, getClientDiscountLink } from "@/lib/ref-code";
-import { formatMoney, getNextTierInfo, CLIENT_DISCOUNT_PERCENT } from "@/lib/bonus";
+import { formatMoney, CLIENT_DISCOUNT_PERCENT, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
 import { CopyButton } from "@/components/CopyButton";
 import { StatusBadge } from "@/components/StatusBadge";
 import { BalanceActions } from "@/components/BalanceActions";
@@ -15,7 +15,6 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const tier = getNextTierInfo(user.successfulOrders);
   const referralLink = getReferralLink(user.refCode);
   const clientDiscountLink = getClientDiscountLink(user.refCode);
 
@@ -66,10 +65,8 @@ export default async function DashboardPage() {
             <CopyButton value={user.refCode} label="Копировать код" />
           </div>
           <p className="mt-4 text-sm text-muted">
-            Текущий уровень: {tier.currentPercent}%.
-            {tier.nextPercent
-              ? ` Ещё ${tier.referralsUntilNext} успешный заказ до ${tier.nextPercent}%.`
-              : " Вы достигли максимального уровня 10%."}
+            За каждый доставленный заказ приглашённого клиента вы получаете {REFERRER_BONUS_PERCENT}%
+            от суммы к оплате. Успешных заказов: {user.successfulOrders}.
           </p>
         </div>
       </section>

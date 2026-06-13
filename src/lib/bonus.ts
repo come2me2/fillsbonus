@@ -1,47 +1,11 @@
-export const TIER_PERCENTS = [5, 7, 10] as const;
+export const REFERRER_BONUS_PERCENT = 5;
 export const CLIENT_DISCOUNT_PERCENT = 5;
 
-export function getBonusPercent(successfulOrders: number): number {
-  if (successfulOrders <= 0) return TIER_PERCENTS[0];
-  if (successfulOrders === 1) return TIER_PERCENTS[1];
-  return TIER_PERCENTS[2];
-}
-
-export function getNextTierInfo(successfulOrders: number): {
-  currentPercent: number;
-  nextPercent: number | null;
-  referralsUntilNext: number;
-} {
-  const currentPercent = getBonusPercent(successfulOrders);
-
-  if (successfulOrders <= 0) {
-    return {
-      currentPercent,
-      nextPercent: TIER_PERCENTS[1],
-      referralsUntilNext: 1,
-    };
-  }
-
-  if (successfulOrders === 1) {
-    return {
-      currentPercent,
-      nextPercent: TIER_PERCENTS[2],
-      referralsUntilNext: 1,
-    };
-  }
-
-  return {
-    currentPercent,
-    nextPercent: null,
-    referralsUntilNext: 0,
-  };
-}
-
-export function calculateBonusAmount(amount: number, successfulOrders: number): {
+export function calculateBonusAmount(amount: number): {
   percent: number;
   bonus: number;
 } {
-  const percent = getBonusPercent(successfulOrders);
+  const percent = REFERRER_BONUS_PERCENT;
   const bonus = Math.round((amount * percent) / 100);
 
   return { percent, bonus };

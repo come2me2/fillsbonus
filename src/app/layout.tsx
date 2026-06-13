@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto } from "next/font/google";
 import { SiteHeader } from "@/components/SiteHeader";
+import { FILLS_LOGO_SRC } from "@/components/FillsLogo";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin", "cyrillic"],
+  weight: ["300", "400", "500", "700"],
 });
 
 export const metadata: Metadata = {
   title: "FILLS Bonus — реферальная программа",
   description:
-    "Приводите друзей в FILLS и получайте до 10% от оплаченного заказа на бонусный баланс.",
+    "Приводите друзей в FILLS: 5% бонус вам и 5% скидка другу на оплаченный заказ.",
+  icons: {
+    icon: FILLS_LOGO_SRC,
+    apple: FILLS_LOGO_SRC,
+  },
 };
 
 export const dynamic = "force-dynamic";
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="ru" className={`${roboto.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <SiteHeader />
         <main className="flex-1">{children}</main>

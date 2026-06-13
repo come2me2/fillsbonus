@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { StatusBadge } from "@/components/StatusBadge";
-import { CLIENT_DISCOUNT_PERCENT } from "@/lib/bonus";
+import { CLIENT_DISCOUNT_PERCENT, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
 
 type Order = {
   amount: string | number;
@@ -104,8 +104,8 @@ export function AdminPanel({
       <section className="rounded-3xl border border-border bg-card p-6">
         <h2 className="text-xl font-medium">Заявки и заказы</h2>
         <p className="mt-2 text-sm text-muted">
-          Приглашённый клиент получает скидку {CLIENT_DISCOUNT_PERCENT}% от суммы сметы. Бонус рефереру
-          начисляется с суммы к оплате после скидки.
+          Приглашённый клиент получает скидку {CLIENT_DISCOUNT_PERCENT}% от суммы сметы. Бонус
+          рефереру — {REFERRER_BONUS_PERCENT}% от суммы к оплате после скидки.
         </p>
         <div className="mt-6 space-y-4">
           {referrals.map((referral) => {

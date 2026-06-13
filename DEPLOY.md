@@ -24,6 +24,7 @@ AUTH_SECRET=случайная_длинная_строка_32+_символов
 ADMIN_EMAILS=info@filsdesign.ru
 ADMIN_EMAIL=info@filsdesign.ru
 NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
+NEXT_PUBLIC_BONUS_URL=https://bonus.fillsdesign.ru
 TILDA_WEBHOOK_SECRET=
 ```
 
@@ -37,6 +38,7 @@ AUTH_SECRET=...
 ADMIN_EMAILS=info@filsdesign.ru
 ADMIN_EMAIL=info@filsdesign.ru
 NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
+NEXT_PUBLIC_BONUS_URL=https://bonus.fillsdesign.ru
 TILDA_WEBHOOK_SECRET=
 ```
 
@@ -68,6 +70,7 @@ AUTH_SECRET=случайная_длинная_строка_32+_символов
 ADMIN_EMAILS=info@filsdesign.ru
 ADMIN_EMAIL=info@filsdesign.ru
 NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
+NEXT_PUBLIC_BONUS_URL=https://bonus.fillsdesign.ru
 TILDA_WEBHOOK_SECRET=
 ```
 
@@ -102,13 +105,20 @@ vercel
 
 ## 6. Публикация JS-трекера
 
-Файл [`integrations/tilda-ref-tracker.js`](./integrations/tilda-ref-tracker.js) доступен по адресу:
+Файл [`public/tilda-ref-tracker.js`](./public/tilda-ref-tracker.js) доступен по адресам:
 
 ```text
-https://bonus.fillsdesign.ru/tilda-ref-tracker.js
+https://fillsbonus.vercel.app/tilda-ref-tracker.js
+https://bonus.fillsdesign.ru/tilda-ref-tracker.js   # после настройки DNS
 ```
 
-Он автоматически отдаётся из `public/tilda-ref-tracker.js`.
+Полная инструкция для Tilda: [`integrations/TILDA_SETUP.md`](./integrations/TILDA_SETUP.md)
+
+Проверка инфраструктуры:
+
+```bash
+npm run check:infra
+```
 
 ## 7. Smoke test после деплоя
 

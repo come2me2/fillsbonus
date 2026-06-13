@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type AuthFormProps = {
   mode: "login" | "register";
@@ -9,6 +9,7 @@ type AuthFormProps = {
 
 export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +36,12 @@ export function AuthForm({ mode }: AuthFormProps) {
       return;
     }
 
-    router.push("/dashboard");
+    const nextPath = searchParams.get("next");
+    const destination =
+      nextPath ??
+      (mode === "login" && data.user?.isAdmin ? "/admin" : "/dashboard");
+
+    router.push(destination);
     router.refresh();
   }
 
