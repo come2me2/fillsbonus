@@ -1,5 +1,51 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Roboto2";
+  src: url("https://static.tildacdn.com/tild6630-3862-4065-b932-663461366535/Roboto-Thin.woff")
+    format("woff");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto2";
+  src: url("https://static.tildacdn.com/tild3861-6130-4361-b866-333339626139/Roboto-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto2";
+  src: url("https://static.tildacdn.com/tild3832-3066-4539-b362-633738633237/Roboto-Light_1.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto2";
+  src: url("https://static.tildacdn.com/tild3832-3066-4539-b362-633738633237/Roboto-Light_1.woff")
+    format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto2";
+  src: url("https://static.tildacdn.com/tild3832-3066-4539-b362-633738633237/Roboto-Light_1.woff")
+    format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Palette aligned with fillsdesign.ru (Tilda project 8575135) */
 :root {
   --background: #fafafa;
   --foreground: #1c1c1c;
@@ -7,8 +53,10 @@
   --brand-dark: #000000;
   --accent: #7d4b3a;
   --muted: #505050;
+  --muted-light: #c1c1c1;
   --card: #ffffff;
   --border: #e5e5e5;
+  --surface: #f2f2f2;
 }
 
 @theme inline {
@@ -18,15 +66,19 @@
   --color-brand-dark: var(--brand-dark);
   --color-accent: var(--accent);
   --color-muted: var(--muted);
+  --color-muted-light: var(--muted-light);
   --color-card: var(--card);
   --color-border: var(--border);
-  --font-sans: var(--font-roboto);
+  --color-surface: var(--surface);
+  --font-sans: "Roboto2", Arial, Helvetica, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-roboto), Roboto, Arial, Helvetica, sans-serif;
+  font-family: "Roboto2", Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer components {

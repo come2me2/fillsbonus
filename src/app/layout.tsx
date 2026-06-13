@@ -1,16 +1,9 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { FILLS_LOGO_SRC } from "@/components/FillsLogo";
 import { getBonusSiteUrl } from "@/lib/site-urls";
 import "./globals.css";
-
-const roboto = Roboto({
-  variable: "--font-roboto",
-  subsets: ["latin", "cyrillic"],
-  weight: ["300", "400", "500", "700"],
-});
 
 const siteUrl = getBonusSiteUrl();
 
@@ -42,8 +35,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={`${roboto.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+    <html lang="ru" className="h-full antialiased">
+      <body className="flex min-h-full flex-col font-sans">
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
