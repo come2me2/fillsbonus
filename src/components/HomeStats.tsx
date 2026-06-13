@@ -1,4 +1,4 @@
-import { formatMoney } from "@/lib/bonus";
+import { Money } from "@/components/Money";
 
 type HomeStatsProps = {
   participants: number;
@@ -8,9 +8,18 @@ type HomeStatsProps = {
 
 export function HomeStats({ participants, totalBonuses, successfulOrders }: HomeStatsProps) {
   const cards = [
-    { label: "Участников программы", value: participants.toLocaleString("ru-RU") },
-    { label: "Успешных реферальных заказов", value: successfulOrders.toLocaleString("ru-RU") },
-    { label: "Начислено бонусов", value: formatMoney(totalBonuses) },
+    {
+      label: "Участников программы",
+      value: <span>{participants.toLocaleString("ru-RU")}</span>,
+    },
+    {
+      label: "Успешных реферальных заказов",
+      value: <span>{successfulOrders.toLocaleString("ru-RU")}</span>,
+    },
+    {
+      label: "Начислено бонусов",
+      value: <Money amount={totalBonuses} />,
+    },
   ];
 
   return (

@@ -23,11 +23,13 @@ export function calculateClientDiscount(quoteAmount: number): {
   return { percent, discount, finalAmount };
 }
 
-export function formatMoney(amount: number | string): string {
+export function formatMoneyAmount(amount: number | string): string {
   const value = typeof amount === "string" ? Number(amount) : amount;
   return new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "RUB",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+export function formatMoney(amount: number | string): string {
+  return `${formatMoneyAmount(amount)}\u202f₽`;
 }

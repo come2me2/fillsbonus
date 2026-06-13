@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Money } from "@/components/Money";
 import {
   calculateBonusAmount,
   calculateClientDiscount,
-  formatMoney,
   REFERRER_BONUS_PERCENT,
   CLIENT_DISCOUNT_PERCENT,
 } from "@/lib/bonus";
@@ -39,24 +39,36 @@ export function BonusCalculator() {
           className="w-full accent-brand"
         />
         <div className="mt-2 flex items-center justify-between text-sm">
-          <span className="text-muted">{formatMoney(MIN_AMOUNT)}</span>
-          <span className="text-xl font-semibold text-brand-dark">{formatMoney(amount)}</span>
-          <span className="text-muted">{formatMoney(MAX_AMOUNT)}</span>
+          <span className="text-muted">
+            <Money amount={MIN_AMOUNT} />
+          </span>
+          <span className="text-xl font-semibold text-brand-dark">
+            <Money amount={amount} />
+          </span>
+          <span className="text-muted">
+            <Money amount={MAX_AMOUNT} />
+          </span>
         </div>
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl bg-muted/20 p-4">
           <p className="text-sm text-muted">Скидка другу ({CLIENT_DISCOUNT_PERCENT}%)</p>
-          <p className="mt-1 text-xl font-semibold text-green-700">−{formatMoney(discount)}</p>
+          <p className="mt-1 text-xl font-semibold text-green-700">
+            −<Money amount={discount} />
+          </p>
         </div>
         <div className="rounded-2xl bg-muted/20 p-4">
           <p className="text-sm text-muted">Друг заплатит</p>
-          <p className="mt-1 text-xl font-semibold">{formatMoney(finalAmount)}</p>
+          <p className="mt-1 text-xl font-semibold">
+            <Money amount={finalAmount} />
+          </p>
         </div>
         <div className="rounded-2xl bg-accent/10 p-4">
           <p className="text-sm text-muted">Ваш бонус ({REFERRER_BONUS_PERCENT}%)</p>
-          <p className="mt-1 text-xl font-semibold text-accent">{formatMoney(bonus)}</p>
+          <p className="mt-1 text-xl font-semibold text-accent">
+            <Money amount={bonus} />
+          </p>
         </div>
       </div>
 

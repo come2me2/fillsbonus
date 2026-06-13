@@ -35,8 +35,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className="h-full antialiased">
-      <body className="flex min-h-full flex-col font-sans">
+    <html lang="ru" className="h-full font-sans antialiased">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Roboto-Regular.woff"
+          as="font"
+          type="font/woff"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Roboto-Light.woff"
+          as="font"
+          type="font/woff"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="flex min-h-full flex-col">
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
