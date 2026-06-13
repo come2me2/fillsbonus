@@ -124,6 +124,26 @@ export function isTildaWebhookTest(payload: TildaPayload): boolean {
   return testValue === "test" && keys.length <= 2;
 }
 
+function findRefCodeByHeuristic(payload: TildaPayload): string | undefined {
+  for (const [key, value] of Object.entries(payload)) {
+    if (META_KEYS.has(key.toLowerCase()) || !value.trim()) {
+      continue;
+    }
+
+    const normalizedKey = key.toLowerCase().replace(/[\s_-]+/g, "");
+
+    if (normalizedKey === "refcode" || normalizedKey === "promocode") {
+      return value;
+    }
+
+    if (/ref.*code|promo.*code|промокод/i.test(key)) {
+      return value;
+    }
+  }
+
+  return undefined;
+}
+
 export function extractTildaLead(payload: TildaPayload) {
   const clientName =
     pickField(payload, [

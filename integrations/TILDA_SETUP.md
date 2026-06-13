@@ -73,7 +73,7 @@
 Для каждой формы (главная, каталог, cooperation, callback):
 
 ### Скрытое поле
-- **Имя переменной:** `ref_code`
+- **Имя переменной:** `ref_code` (без пробелов; не `ref code`)
 - **Тип:** hidden
 
 ### Webhook (Tilda Business)
