@@ -3,6 +3,7 @@ import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { AdminPanel } from "@/components/AdminPanel";
 import { AdminStats } from "@/components/AdminStats";
+import { ReferrerTable } from "@/components/ReferrerTable";
 import { SeedMockButton } from "@/components/SeedMockButton";
 
 export default async function AdminPage() {
@@ -51,32 +52,10 @@ export default async function AdminPage() {
 
       <section className="mt-8 rounded-3xl border border-border bg-card p-6">
         <h2 className="text-xl font-medium">Рефереры</h2>
-        <div className="mt-4 overflow-hidden rounded-2xl border border-border">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-border bg-white/70">
-              <tr>
-                <th className="px-4 py-3">Имя</th>
-                <th className="px-4 py-3">Код</th>
-                <th className="px-4 py-3">Успешных заказов</th>
-                <th className="px-4 py-3">Баланс</th>
-                <th className="px-4 py-3">Заявок</th>
-              </tr>
-            </thead>
-            <tbody>
-              {referrers.map((referrer) => (
-                <tr key={referrer.id} className="border-b border-border last:border-none">
-                  <td className="px-4 py-3">{referrer.name}</td>
-                  <td className="px-4 py-3">{referrer.refCode}</td>
-                  <td className="px-4 py-3">{referrer.successfulOrders}</td>
-                  <td className="px-4 py-3">
-                    {Number(referrer.bonusBalance).toLocaleString("ru-RU")} ₽
-                  </td>
-                  <td className="px-4 py-3">{referrer._count.referrals}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <p className="mt-1 text-sm text-muted">
+          Нажмите «Изменить» рядом с промокодом, чтобы задать красивый код участнику.
+        </p>
+        <ReferrerTable initialReferrers={JSON.parse(JSON.stringify(referrers))} />
       </section>
 
       <div className="mt-10">

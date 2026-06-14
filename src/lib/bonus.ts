@@ -31,5 +31,5 @@ export function formatMoneyAmount(amount: number | string): string {
 }
 
 export function formatMoney(amount: number | string): string {
-  return `${formatMoneyAmount(amount)}\u202f₽`;
+  return `${formatMoneyAmount(amount)}\u202fруб.`;
 }

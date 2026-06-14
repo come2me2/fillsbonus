@@ -9,7 +9,7 @@ export function Money({ amount, className }: MoneyProps) {
   return (
     <span className={className}>
       {formatMoneyAmount(amount)}
-      <span className="money-ruble">{"\u202f"}₽</span>
+      {"\u202f"}руб.
     </span>
   );
 }
