@@ -89,7 +89,7 @@
     var el = document.createElement("div");
     el.id = statusId;
     el.style.cssText =
-      "margin-top:4px; font-size:13px; color:" + (isOk ? "#2d7a2d" : "#c0392b") + ";";
+      "margin-top:4px; font-size:13px; font-family:'Roboto2',Roboto,sans-serif; color:" + (isOk ? "#2d7a2d" : "#c0392b") + ";";
     el.textContent = message;
     if (input.parentNode) input.parentNode.appendChild(el);
   }
