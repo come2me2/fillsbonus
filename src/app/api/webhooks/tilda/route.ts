@@ -56,12 +56,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: "Referrer not found" }, { status: 404 });
     }
 
+    const source =
+      payload.ref_source === "code" ? ReferralSource.CODE : ReferralSource.LINK;
+
     const result = await createReferralLead({
       referrerId: referrer.id,
       clientName: lead.clientName,
       clientPhone: lead.clientPhone,
       clientEmail: lead.clientEmail,
-      source: ReferralSource.LINK,
+      source,
       notes: lead.notes,
     });
 
