@@ -24,11 +24,11 @@ export function AdminStats({ referrals }: { referrals: ReferralForStats[] }) {
     { label: "Ожидают действия", value: pendingAction.toLocaleString("ru-RU") },
     {
       label: "Суммарный оборот",
-      value: `${turnover.toLocaleString("ru-RU")} ₽`,
+      value: `${turnover.toLocaleString("ru-RU")} руб.`,
     },
     {
       label: "Выплачено бонусов",
-      value: `${bonusesPaid.toLocaleString("ru-RU")} ₽`,
+      value: `${bonusesPaid.toLocaleString("ru-RU")} руб.`,
     },
   ];
 

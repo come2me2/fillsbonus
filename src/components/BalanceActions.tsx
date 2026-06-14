@@ -44,7 +44,7 @@ export function BalanceActions({ balance }: { balance: number }) {
     <div className="grid gap-6 md:grid-cols-2">
       <form onSubmit={handleWithdraw} className="rounded-3xl border border-border bg-card p-6">
         <h3 className="text-lg font-medium">Запросить вывод</h3>
-        <p className="mt-2 text-sm text-muted">Доступно: {balance.toLocaleString("ru-RU")} ₽</p>
+        <p className="mt-2 text-sm text-muted">Доступно: {balance.toLocaleString("ru-RU")} руб.</p>
         <input
           name="amount"
           type="number"

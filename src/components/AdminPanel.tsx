@@ -392,19 +392,19 @@ export function AdminPanel({
                       <div>
                         <p className="text-muted">Смета</p>
                         <p className="font-medium">
-                          {Number(order.quoteAmount).toLocaleString("ru-RU")} ₽
+                          {Number(order.quoteAmount).toLocaleString("ru-RU")} руб.
                         </p>
                       </div>
                       <div>
                         <p className="text-muted">Скидка клиенту {CLIENT_DISCOUNT_PERCENT}%</p>
                         <p className="font-medium text-green-700">
-                          −{Number(order.clientDiscountAmount ?? 0).toLocaleString("ru-RU")} ₽
+                          −{Number(order.clientDiscountAmount ?? 0).toLocaleString("ru-RU")} руб.
                         </p>
                       </div>
                       <div>
                         <p className="text-muted">К оплате</p>
                         <p className="font-medium">
-                          {Number(order.amount).toLocaleString("ru-RU")} ₽
+                          {Number(order.amount).toLocaleString("ru-RU")} руб.
                         </p>
                       </div>
                     </div>
@@ -416,7 +416,7 @@ export function AdminPanel({
                   >
                     <div>
                       <label className="mb-1 block text-xs text-muted">
-                        Сумма сметы до скидки, ₽
+                        Сумма сметы до скидки, руб.
                       </label>
                       <input
                         name="quoteAmount"
@@ -434,7 +434,7 @@ export function AdminPanel({
                             return;
                           }
                           const { discount, finalAmount } = previewClientDiscount(value);
-                          preview.textContent = `Скидка ${CLIENT_DISCOUNT_PERCENT}%: −${discount.toLocaleString("ru-RU")} ₽ → к оплате ${finalAmount.toLocaleString("ru-RU")} ₽`;
+                          preview.textContent = `Скидка ${CLIENT_DISCOUNT_PERCENT}%: −${discount.toLocaleString("ru-RU")} руб. → к оплате ${finalAmount.toLocaleString("ru-RU")} руб.`;
                         }}
                       />
                       <p data-preview-for={referral.id} className="mt-1 text-xs text-muted" />
@@ -545,7 +545,7 @@ export function AdminPanel({
                   </div>
                   <div className="text-right">
                     <p className="font-medium">
-                      {Number(transaction.amount).toLocaleString("ru-RU")} ₽
+                      {Number(transaction.amount).toLocaleString("ru-RU")} руб.
                     </p>
                     <StatusBadge status={transaction.type} />
                   </div>
