@@ -3,7 +3,7 @@ export function getBonusSiteUrl(): string {
   return (
     process.env.NEXT_PUBLIC_BONUS_URL?.trim() ||
     process.env.BONUS_SITE_URL?.trim() ||
-    "https://fillsbonus.vercel.app"
+    "https://www.fillsbonus.ru"
   );
 }
 

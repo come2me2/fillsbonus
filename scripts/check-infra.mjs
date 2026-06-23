@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const BONUS_URL = process.env.BONUS_SITE_URL || "https://fillsbonus.vercel.app";
-const BONUS_DOMAIN_URL = "https://bonus.fillsdesign.ru";
+const BONUS_URL = process.env.BONUS_SITE_URL || "https://www.fillsbonus.ru";
+const BONUS_FALLBACK_URL = "https://fillsbonus.vercel.app";
 
 async function checkUrl(label, url, expectOk = true) {
   try {
@@ -19,7 +19,7 @@ async function checkUrl(label, url, expectOk = true) {
 async function main() {
   console.log("Fills Bonus — проверка инфраструктуры\n");
 
-  const health = await checkUrl("Health (Vercel)", `${BONUS_URL}/api/health`);
+  const health = await checkUrl("Health (primary)", `${BONUS_URL}/api/health`);
   if (health.ok) {
     const data = await fetch(`${BONUS_URL}/api/health`).then((r) => r.json());
     console.log(`  hasUserTable: ${data.hasUserTable}`);
@@ -30,16 +30,16 @@ async function main() {
   await checkUrl("Tracker JS", `${BONUS_URL}/tilda-ref-tracker.js`);
   await checkUrl("Webhook endpoint (OPTIONS/POST)", `${BONUS_URL}/api/webhooks/tilda`, false);
 
-  const domainHealth = await checkUrl("Health (bonus.fillsdesign.ru)", `${BONUS_DOMAIN_URL}/api/health`);
-  if (!domainHealth.ok) {
-    console.log("\n⚠ bonus.fillsdesign.ru недоступен — используйте fillsbonus.vercel.app в Tilda.");
-    console.log("  DNS: CNAME bonus → cname.vercel-dns.com + домен в Vercel → Settings → Domains");
+  const fallbackHealth = await checkUrl("Health (fillsbonus.vercel.app)", `${BONUS_FALLBACK_URL}/api/health`);
+  if (!health.ok && fallbackHealth.ok) {
+    console.log("\n⚠ www.fillsbonus.ru недоступен — временно используйте fillsbonus.vercel.app в Tilda.");
+    console.log("  Для России: деплой на ONREZA — integrations/ONREZA_SETUP.md");
   }
 
   console.log("\nEnv для Vercel (добавить вручную):");
   console.log("  AUTH_SECRET, ADMIN_EMAILS=info@filsdesign.ru");
   console.log("  NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru");
-  console.log("  NEXT_PUBLIC_BONUS_URL=https://bonus.fillsdesign.ru (или fillsbonus.vercel.app)");
+  console.log("  NEXT_PUBLIC_BONUS_URL=https://www.fillsbonus.ru");
   console.log("  TILDA_WEBHOOK_SECRET=(опционально)");
 }
 

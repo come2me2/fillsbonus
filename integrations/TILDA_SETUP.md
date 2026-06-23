@@ -12,8 +12,9 @@
 | 3. Контент на сайте | [`tilda-site-content.html`](./tilda-site-content.html) |
 | 4. Тест webhook | `npm run test:tilda-webhook -- FILSADMN` |
 
-**Production URL (сейчас):** `https://fillsbonus.vercel.app`  
-**Целевой URL:** `https://bonus.fillsdesign.ru` (после настройки DNS)
+**Production URL:** `https://www.fillsbonus.ru` (ONREZA, Россия)  
+**Резерв:** `https://fillsbonus.vercel.app`  
+**Миграция на ONREZA:** [`ONREZA_SETUP.md`](./ONREZA_SETUP.md)
 
 ---
 

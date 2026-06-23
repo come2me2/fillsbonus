@@ -1,0 +1,28 @@
+#:schema https://raw.githubusercontent.com/ONREZA/nrz-cli/main/onreza.schema.json
+# Деплой на ONREZA (серверы в Москве). Инструкция: integrations/ONREZA_SETUP.md
+
+[project]
+name = "fillsbonus"
+
+[build]
+command = "npm run onreza-build"
+output_dirs = [".next"]
+
+[deploy]
+compute = "process"
+entry = ".next/standalone/server.js"
+health_check_path = "/api/health"
+
+[env.declarations]
+DATABASE_URL = "sensitive"
+POSTGRES_PRISMA_URL = { visibility = "sensitive", required = false }
+POSTGRES_URL_NON_POOLING = { visibility = "sensitive", required = false }
+POSTGRES_URL = { visibility = "sensitive", required = false }
+AUTH_SECRET = "sensitive"
+ADMIN_EMAILS = "plain"
+ADMIN_EMAIL = "plain"
+NEXT_PUBLIC_SITE_URL = "plain"
+NEXT_PUBLIC_BONUS_URL = "plain"
+TILDA_WEBHOOK_SECRET = { visibility = "sensitive", required = false }
+TELEGRAM_BOT_TOKEN = { visibility = "sensitive", required = false }
+TELEGRAM_CHAT_ID = { visibility = "sensitive", required = false }

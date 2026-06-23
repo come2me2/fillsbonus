@@ -4,12 +4,16 @@
 
 | Параметр | Значение |
 |----------|----------|
-| URL | `https://fillsbonus.vercel.app/api/webhooks/tilda` |
+| URL | `https://www.fillsbonus.ru/api/webhooks/tilda` |
 | Метод | POST |
 
-После настройки DNS `bonus.fillsdesign.ru`:
+После деплоя на ONREZA:
 
-| URL | `https://bonus.fillsdesign.ru/api/webhooks/tilda` |
+| URL | `https://www.fillsbonus.ru/api/webhooks/tilda` |
+
+Резерв (Vercel):
+
+| URL | `https://fillsbonus.vercel.app/api/webhooks/tilda` |
 
 ## Скрытое поле в форме
 

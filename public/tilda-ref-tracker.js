@@ -2,7 +2,23 @@
   var STORAGE_KEY = "fils_ref_code";
   var COOKIE_KEY = "fils_ref_code";
   var COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
-  var API_BASE = "https://fillsbonus.vercel.app";
+  var API_BASE = "https://www.fillsbonus.ru";
+  try {
+    var scriptSrc =
+      (document.currentScript && document.currentScript.src) ||
+      (function () {
+        var scripts = document.getElementsByTagName("script");
+        for (var i = scripts.length - 1; i >= 0; i--) {
+          if (scripts[i].src && scripts[i].src.indexOf("tilda-ref-tracker.js") !== -1) {
+            return scripts[i].src;
+          }
+        }
+        return "";
+      })();
+    if (scriptSrc) {
+      API_BASE = new URL(scriptSrc).origin;
+    }
+  } catch (_error) {}
 
   function readQueryRef() {
     try {

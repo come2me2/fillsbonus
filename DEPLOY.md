@@ -1,5 +1,10 @@
 # Деплой Fils Bonus
 
+**Для России (без VPN):** основной хостинг — [ONREZA](https://onreza.ru/) → [`integrations/ONREZA_SETUP.md`](./integrations/ONREZA_SETUP.md)
+
+**Резерв / разработка:** Vercel (ниже).
+
+---
 ## 1. Supabase PostgreSQL
 
 1. Создайте проект на [supabase.com](https://supabase.com).
@@ -24,7 +29,7 @@ AUTH_SECRET=случайная_длинная_строка_32+_символов
 ADMIN_EMAILS=info@filsdesign.ru
 ADMIN_EMAIL=info@filsdesign.ru
 NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
-NEXT_PUBLIC_BONUS_URL=https://bonus.fillsdesign.ru
+NEXT_PUBLIC_BONUS_URL=https://www.fillsbonus.ru
 TILDA_WEBHOOK_SECRET=
 ```
 
@@ -38,7 +43,7 @@ AUTH_SECRET=...
 ADMIN_EMAILS=info@filsdesign.ru
 ADMIN_EMAIL=info@filsdesign.ru
 NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
-NEXT_PUBLIC_BONUS_URL=https://bonus.fillsdesign.ru
+NEXT_PUBLIC_BONUS_URL=https://www.fillsbonus.ru
 TILDA_WEBHOOK_SECRET=
 ```
 
@@ -70,7 +75,7 @@ AUTH_SECRET=случайная_длинная_строка_32+_символов
 ADMIN_EMAILS=info@filsdesign.ru
 ADMIN_EMAIL=info@filsdesign.ru
 NEXT_PUBLIC_SITE_URL=https://fillsdesign.ru
-NEXT_PUBLIC_BONUS_URL=https://bonus.fillsdesign.ru
+NEXT_PUBLIC_BONUS_URL=https://www.fillsbonus.ru
 TILDA_WEBHOOK_SECRET=
 ```
 

@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "vercel-build": "node scripts/vercel-build.mjs",
+    "onreza-build": "node scripts/vercel-build.mjs",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
