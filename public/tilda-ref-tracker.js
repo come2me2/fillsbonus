@@ -2,7 +2,7 @@
   var STORAGE_KEY = "fils_ref_code";
   var COOKIE_KEY = "fils_ref_code";
   var COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
-  var API_BASE = "https://www.fillsbonus.ru";
+  var API_BASE = "https://fillsbonus.ru";
   try {
     var scriptSrc =
       (document.currentScript && document.currentScript.src) ||
@@ -153,6 +153,41 @@
       });
   }
 
+  function collectFormData(form) {
+    var data = {};
+    Array.prototype.forEach.call(form.elements, function (input) {
+      if (!input.name) return;
+      if (input.type === "radio" && !input.checked) return;
+      if (input.type === "checkbox" && !input.checked) return;
+      data[input.name] = input.value;
+    });
+    return data;
+  }
+
+  function sendLeadToApi(form) {
+    ensureHiddenField(form, getStoredRefCode());
+    var data = collectFormData(form);
+    if (!data.Phone && !data.phone) return;
+
+    fetch(API_BASE + "/api/webhooks/tilda", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+      keepalive: true,
+    }).catch(function () {});
+  }
+
+  function attachSuccessHandlers() {
+    var forms = document.querySelectorAll(".js-form-proccess, form");
+    forms.forEach(function (form) {
+      if (form.dataset.filsSuccess) return;
+      form.dataset.filsSuccess = "1";
+      form.addEventListener("tildaform:aftersuccess", function () {
+        sendLeadToApi(form);
+      });
+    });
+  }
+
   function attachToForms(code) {
     var forms = document.querySelectorAll("form");
     forms.forEach(function (form) {
@@ -187,9 +222,11 @@
 
     var refCode = getStoredRefCode();
     attachToForms(refCode);
+    attachSuccessHandlers();
 
     var observer = new MutationObserver(function () {
       attachToForms(getStoredRefCode());
+      attachSuccessHandlers();
     });
 
     observer.observe(document.documentElement, {
