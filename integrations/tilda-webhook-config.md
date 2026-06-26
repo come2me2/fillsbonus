@@ -4,12 +4,12 @@
 
 | Параметр | Значение |
 |----------|----------|
-| URL | `https://www.fillsbonus.ru/api/webhooks/tilda` |
+| URL | `https://fillsbonus.ru/api/webhooks/tilda` |
 | Метод | POST |
 
 После деплоя на ONREZA:
 
-| URL | `https://www.fillsbonus.ru/api/webhooks/tilda` |
+| URL | `https://fillsbonus.ru/api/webhooks/tilda` |
 
 Резерв (Vercel):
 
