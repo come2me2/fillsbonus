@@ -25,6 +25,7 @@ export async function POST(request: Request) {
     const payload = parseTildaPayload(body);
 
     if (!verifyTildaWebhook(payload)) {
+      console.warn("[tilda webhook] rejected: invalid secret", getPayloadFieldNames(payload));
       return NextResponse.json({ ok: false, error: "Invalid webhook secret" }, { status: 401 });
     }
 
@@ -33,6 +34,12 @@ export async function POST(request: Request) {
     }
 
     const lead = extractTildaLead(payload);
+    console.info("[tilda webhook] lead", {
+      fields: getPayloadFieldNames(payload),
+      phone: lead.clientPhone ? "yes" : "no",
+      refCode: lead.refCode || "(empty)",
+      name: lead.clientName,
+    });
 
     if (!lead.clientPhone) {
       return NextResponse.json(
@@ -47,12 +54,14 @@ export async function POST(request: Request) {
     }
 
     if (!lead.refCode) {
+      console.info("[tilda webhook] skipped: no referral code");
       return NextResponse.json({ ok: true, skipped: true, reason: "No referral code" });
     }
 
     const referrer = await findReferrerByCode(lead.refCode);
 
     if (!referrer) {
+      console.warn("[tilda webhook] referrer not found:", lead.refCode);
       return NextResponse.json({ ok: false, error: "Referrer not found" }, { status: 404 });
     }
 
@@ -69,9 +78,11 @@ export async function POST(request: Request) {
     });
 
     if (!result.ok) {
+      console.warn("[tilda webhook] create failed:", result.error, lead.clientPhone);
       return NextResponse.json({ ok: false, error: result.error }, { status: 409 });
     }
 
+    console.info("[tilda webhook] created:", result.referral.id, lead.refCode);
     await notifyNewLead({
       clientName: lead.clientName,
       clientPhone: lead.clientPhone,
