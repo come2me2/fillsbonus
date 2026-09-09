@@ -1,12 +1,10 @@
-import { ReferralStatus } from "@/generated/prisma/client";
 import { HomeHero } from "@/components/HomeHero";
 import { BonusCalculator } from "@/components/BonusCalculator";
 import { HomeStats } from "@/components/HomeStats";
 import { HomeFAQ } from "@/components/HomeFAQ";
 import { StickyRegisterBar } from "@/components/StickyRegisterBar";
 import { CLIENT_DISCOUNT_PERCENT, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
-import { getDisplayHomeStats } from "@/lib/home-stats-display";
-import { prisma } from "@/lib/prisma";
+import { HOME_STATS_FLOOR } from "@/lib/home-stats-display";
 import { getSessionUser } from "@/lib/session";
 
 const steps = [
@@ -16,24 +14,9 @@ const steps = [
 ];
 
 export default async function HomePage() {
+  // Без тяжёлых запросов к Supabase (US) — иначе главная тормозит ~1с+ из РФ
   const user = await getSessionUser();
-
-  const [participants, bonusAggregate, successfulOrders] = await Promise.all([
-    prisma.user.count(),
-    prisma.order.aggregate({
-      _sum: { bonusAmount: true },
-    }),
-    prisma.referral.count({
-      where: { status: ReferralStatus.BONUS_ACCRUED },
-    }),
-  ]);
-
-  const totalBonuses = Number(bonusAggregate._sum.bonusAmount ?? 0);
-  const displayStats = getDisplayHomeStats({
-    participants,
-    totalBonuses,
-    successfulOrders,
-  });
+  const displayStats = HOME_STATS_FLOOR;
 
   return (
     <div
