@@ -186,11 +186,13 @@ NEXT_PUBLIC_BONUS_URL=https://www.fillsbonus.ru
 
 | Проблема | Решение |
 |----------|---------|
+| `[INVALID_CONFIG] Edge build process failed` | В `onreza.toml` должно быть `compute = "process"` + `output: "standalone"` в `next.config.ts`. В UI ONREZA выберите **Process / Node**, не Edge. Redeploy после `git pull`. |
+| Нет `.next/standalone/server.js` | В `next.config.ts` нужен `output: "standalone"`, затем `npm run build` |
 | Сборка: Prisma | Добавьте `POSTGRES_URL_NON_POOLING` |
 | 502 после деплоя | Проверьте логи ONREZA, `AUTH_SECRET` и `DATABASE_URL` |
 | Домен не открывается | NS на Reg.ru, записи из ONREZA, подождать 15–60 мин |
 | Webhook Tilda 401 | `TILDA_WEBHOOK_SECRET` совпадает с формой |
-| Сайт на Vercel, ONREZA параллельно | Оба используют одну Supabase — нормально |
+| Сайт уже на VPS | Основной production — `https://fillsbonus.ru` ([SELF_HOSTED.md](./SELF_HOSTED.md)). ONREZA не обязателен |
 
 ---
 
