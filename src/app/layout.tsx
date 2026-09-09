@@ -12,8 +12,13 @@ export const metadata: Metadata = {
   description:
     "Приводите друзей в FILLS: 5% бонус вам и 5% скидка другу. Бесплатная регистрация, личный кабинет, вывод или трата бонусов на мебель.",
   icons: {
-    icon: FILLS_LOGO_SRC,
-    apple: FILLS_LOGO_SRC,
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/favicon.ico",
   },
   openGraph: {
     title: "FILLS Bonus — зарабатывайте, рекомендуя мебель FILLS",
