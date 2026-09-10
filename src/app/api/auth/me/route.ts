@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/session";
 import { getReferralLink } from "@/lib/ref-code";
-import { CLIENT_DISCOUNT_PERCENT, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
+import { getClientDiscountPercent, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -16,7 +16,7 @@ export async function GET() {
       ...user,
       referralLink: getReferralLink(user.refCode),
       referrerBonusPercent: REFERRER_BONUS_PERCENT,
-      clientDiscountPercent: CLIENT_DISCOUNT_PERCENT,
+      clientDiscountPercent: getClientDiscountPercent(user.refCode),
     },
   });
 }

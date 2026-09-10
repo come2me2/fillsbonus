@@ -1,6 +1,20 @@
 export const REFERRER_BONUS_PERCENT = 5;
 export const CLIENT_DISCOUNT_PERCENT = 5;
 
+/** Индивидуальная скидка покупателю по промокоду реферера */
+const CLIENT_DISCOUNT_OVERRIDES: Record<string, number> = {
+  PUSHMAN: 10,
+};
+
+export function getClientDiscountPercent(refCode?: string | null): number {
+  if (!refCode) {
+    return CLIENT_DISCOUNT_PERCENT;
+  }
+
+  const key = refCode.trim().toUpperCase();
+  return CLIENT_DISCOUNT_OVERRIDES[key] ?? CLIENT_DISCOUNT_PERCENT;
+}
+
 export function calculateBonusAmount(amount: number): {
   percent: number;
   bonus: number;
@@ -11,12 +25,15 @@ export function calculateBonusAmount(amount: number): {
   return { percent, bonus };
 }
 
-export function calculateClientDiscount(quoteAmount: number): {
+export function calculateClientDiscount(
+  quoteAmount: number,
+  refCode?: string | null,
+): {
   percent: number;
   discount: number;
   finalAmount: number;
 } {
-  const percent = CLIENT_DISCOUNT_PERCENT;
+  const percent = getClientDiscountPercent(refCode);
   const discount = Math.round((quoteAmount * percent) / 100);
   const finalAmount = quoteAmount - discount;
 

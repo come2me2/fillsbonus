@@ -30,7 +30,10 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     if (action === "set_amount") {
       const { quoteAmount } = quoteAmountSchema.parse(body);
-      const { percent, discount, finalAmount } = calculateClientDiscount(quoteAmount);
+      const { percent, discount, finalAmount } = calculateClientDiscount(
+        quoteAmount,
+        referral.referrer.refCode,
+      );
 
       await prisma.order.update({
         where: { id: referral.order.id },

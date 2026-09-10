@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { CLIENT_DISCOUNT_PERCENT } from "@/lib/bonus";
+import { getClientDiscountPercent } from "@/lib/bonus";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -32,13 +32,15 @@ export async function GET(_request: Request, context: RouteContext) {
     );
   }
 
+  const clientDiscountPercent = getClientDiscountPercent(referrer.refCode);
+
   return NextResponse.json(
     {
       ok: true,
       refCode: referrer.refCode,
       referrerName: referrer.name,
-      clientDiscountPercent: CLIENT_DISCOUNT_PERCENT,
-      message: `Скидка ${CLIENT_DISCOUNT_PERCENT}% для новых клиентов по промокоду ${referrer.refCode}`,
+      clientDiscountPercent,
+      message: `Скидка ${clientDiscountPercent}% для новых клиентов по промокоду ${referrer.refCode}`,
     },
     { headers: CORS_HEADERS },
   );

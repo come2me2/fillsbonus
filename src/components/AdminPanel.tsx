@@ -2,7 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { StatusBadge } from "@/components/StatusBadge";
-import { CLIENT_DISCOUNT_PERCENT, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
+import { CLIENT_DISCOUNT_PERCENT, getClientDiscountPercent, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
 
 type Order = {
   amount: string | number;
@@ -32,9 +32,11 @@ const STATUS_FILTERS = [
   { value: "BONUS_ACCRUED", label: "Бонус начислен" },
 ] as const;
 
-function previewClientDiscount(quoteAmount: number) {
-  const discount = Math.round((quoteAmount * CLIENT_DISCOUNT_PERCENT) / 100);
+function previewClientDiscount(quoteAmount: number, refCode: string) {
+  const percent = getClientDiscountPercent(refCode);
+  const discount = Math.round((quoteAmount * percent) / 100);
   return {
+    percent,
     discount,
     finalAmount: quoteAmount - discount,
   };
@@ -396,7 +398,14 @@ export function AdminPanel({
                         </p>
                       </div>
                       <div>
-                        <p className="text-muted">Скидка клиенту {CLIENT_DISCOUNT_PERCENT}%</p>
+                        <p className="text-muted">
+                          Скидка клиенту{" "}
+                          {Number(
+                            order.clientDiscountPercent ??
+                              getClientDiscountPercent(referral.referrer.refCode),
+                          )}
+                          %
+                        </p>
                         <p className="font-medium text-green-700">
                           −{Number(order.clientDiscountAmount ?? 0).toLocaleString("ru-RU")} руб.
                         </p>
@@ -433,8 +442,11 @@ export function AdminPanel({
                             if (preview) preview.textContent = "";
                             return;
                           }
-                          const { discount, finalAmount } = previewClientDiscount(value);
-                          preview.textContent = `Скидка ${CLIENT_DISCOUNT_PERCENT}%: −${discount.toLocaleString("ru-RU")} руб. → к оплате ${finalAmount.toLocaleString("ru-RU")} руб.`;
+                          const { percent, discount, finalAmount } = previewClientDiscount(
+                            value,
+                            referral.referrer.refCode,
+                          );
+                          preview.textContent = `Скидка ${percent}%: −${discount.toLocaleString("ru-RU")} руб. → к оплате ${finalAmount.toLocaleString("ru-RU")} руб.`;
                         }}
                       />
                       <p data-preview-for={referral.id} className="mt-1 text-xs text-muted" />

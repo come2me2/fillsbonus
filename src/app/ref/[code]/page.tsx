@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { CLIENT_DISCOUNT_PERCENT } from "@/lib/bonus";
+import { getClientDiscountPercent } from "@/lib/bonus";
 import { getReferralLink } from "@/lib/ref-code";
 
 type PageProps = {
@@ -22,17 +22,18 @@ export default async function RefLandingPage({ params }: PageProps) {
   }
 
   const shopLink = getReferralLink(referrer.refCode);
+  const clientDiscountPercent = getClientDiscountPercent(referrer.refCode);
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16 text-center">
       <p className="text-sm uppercase tracking-[0.3em] text-accent">FILLS Referral Program</p>
       <h1 className="mt-4 text-3xl font-semibold text-brand-dark md:text-4xl">
-        Вам доступна скидка {CLIENT_DISCOUNT_PERCENT}%
+        Вам доступна скидка {clientDiscountPercent}%
       </h1>
       <p className="mt-6 text-lg text-muted">
         {referrer.name} пригласил вас в FILLS. При заказе мебели укажите промокод{" "}
         <span className="font-semibold tracking-[0.15em] text-brand">{referrer.refCode}</span> или
-        перейдите по ссылке ниже — скидка {CLIENT_DISCOUNT_PERCENT}% будет учтена менеджером при
+        перейдите по ссылке ниже — скидка {clientDiscountPercent}% будет учтена менеджером при
         расчёте сметы.
       </p>
 

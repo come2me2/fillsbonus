@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { getReferralLink, getClientDiscountLink } from "@/lib/ref-code";
-import { formatMoney, CLIENT_DISCOUNT_PERCENT, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
+import { formatMoney, getClientDiscountPercent, REFERRER_BONUS_PERCENT } from "@/lib/bonus";
 import { CopyButton } from "@/components/CopyButton";
 import { StatusBadge } from "@/components/StatusBadge";
 import { BalanceActions } from "@/components/BalanceActions";
@@ -17,6 +17,7 @@ export default async function DashboardPage() {
 
   const referralLink = getReferralLink(user.refCode);
   const clientDiscountLink = getClientDiscountLink(user.refCode);
+  const clientDiscountPercent = getClientDiscountPercent(user.refCode);
 
   const [referrals, transactions] = await Promise.all([
     prisma.referral.findMany({
@@ -48,7 +49,7 @@ export default async function DashboardPage() {
         <div className="rounded-3xl border border-border bg-card p-6">
           <h2 className="text-lg font-medium">Ваша реферальная ссылка</h2>
           <p className="mt-2 text-sm text-muted">
-            Друзья получают скидку {CLIENT_DISCOUNT_PERCENT}% на заказ при переходе по ссылке или
+            Друзья получают скидку {clientDiscountPercent}% на заказ при переходе по ссылке или
             промокоду.
           </p>
           <p className="mt-3 break-all rounded-2xl bg-white px-4 py-3 text-sm">{referralLink}</p>
