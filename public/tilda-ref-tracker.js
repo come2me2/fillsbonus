@@ -123,13 +123,21 @@
       return;
     }
 
-    fetch(API_BASE + "/api/ref/" + encodeURIComponent(code))
+    var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var timer = setTimeout(function () {
+      if (controller) controller.abort();
+    }, 2500);
+
+    fetch(API_BASE + "/api/ref/" + encodeURIComponent(code), {
+      signal: controller ? controller.signal : undefined,
+    })
       .then(function (res) {
         return res.json().then(function (data) {
           return { ok: res.ok, data: data };
         });
       })
       .then(function (result) {
+        clearTimeout(timer);
         if (result.ok && result.data.ok) {
           showPromoStatus(
             input,
@@ -149,6 +157,7 @@
         }
       })
       .catch(function () {
+        clearTimeout(timer);
         // Сеть недоступна — не мешаем отправке формы
       });
   }
