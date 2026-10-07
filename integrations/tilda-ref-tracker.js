@@ -3,6 +3,7 @@
   var COOKIE_KEY = "fils_ref_code";
   var COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
   var API_BASE = "https://fillsbonus.ru";
+
   try {
     var scriptSrc =
       (document.currentScript && document.currentScript.src) ||
@@ -60,13 +61,37 @@
     return (getCookie(COOKIE_KEY) || "").toUpperCase();
   }
 
+  /** Только формы заявок Tilda — не трогаем шапку, поиск и служебные form */
+  function isLeadForm(form) {
+    if (!form || form.tagName !== "FORM") return false;
+    if (form.closest(".uc-diff-header, .t-header, header, nav")) return false;
+    if (
+      form.classList.contains("js-form-proccess") ||
+      form.classList.contains("t-form") ||
+      form.querySelector('input[name="promo_code"]') ||
+      form.querySelector('input[name="Phone"]') ||
+      form.querySelector('input[name="phone"]')
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  function getLeadForms() {
+    var all = document.querySelectorAll("form.js-form-proccess, form.t-form, form");
+    var out = [];
+    for (var i = 0; i < all.length; i++) {
+      if (isLeadForm(all[i])) out.push(all[i]);
+    }
+    return out;
+  }
+
   function getPromoInputValue(form) {
     var promoInput = form.querySelector('input[name="promo_code"]');
     return promoInput ? promoInput.value.trim().toUpperCase() : "";
   }
 
   function ensureHiddenField(form, storedCode) {
-    // Ручной ввод промокода имеет приоритет над URL-параметром
     var manualCode = getPromoInputValue(form);
     var code = manualCode || storedCode;
     if (!code) return;
@@ -80,13 +105,11 @@
     }
     input.value = code;
 
-    // Заполнить promo_code из хранилища только если поле пустое
     var promoInput = form.querySelector('input[name="promo_code"]');
     if (promoInput && !promoInput.value.trim() && storedCode) {
       promoInput.value = storedCode;
     }
 
-    // Если пользователь ввёл код вручную — добавить маркер источника
     var sourceInput = form.querySelector('input[name="ref_source"]');
     if (!sourceInput) {
       sourceInput = document.createElement("input");
@@ -97,26 +120,32 @@
     sourceInput.value = manualCode ? "code" : "link";
   }
 
-  function showPromoStatus(input, message, isOk) {
-    var statusId = "fils-promo-status";
-    var existing = input.parentNode && input.parentNode.querySelector("#" + statusId);
+  function promoStatusId(form) {
+    return "fils-promo-status-" + (form.getAttribute("id") || form.dataset.recordId || "form");
+  }
+
+  function showPromoStatus(input, form, message, isOk) {
+    var statusId = promoStatusId(form);
+    var existing = input.parentNode && input.parentNode.querySelector('[data-fils-promo-status="1"]');
     if (existing) existing.parentNode.removeChild(existing);
 
     var el = document.createElement("div");
+    el.setAttribute("data-fils-promo-status", "1");
     el.id = statusId;
     el.style.cssText =
-      "margin-top:4px; font-size:13px; font-family:'Roboto2',Roboto,sans-serif; color:" + (isOk ? "#2d7a2d" : "#c0392b") + ";";
+      "margin-top:4px; font-size:13px; font-family:'Roboto2',Roboto,sans-serif; color:" +
+      (isOk ? "#2d7a2d" : "#c0392b") +
+      ";";
     el.textContent = message;
     if (input.parentNode) input.parentNode.appendChild(el);
   }
 
   function removePromoStatus(input) {
-    var statusId = "fils-promo-status";
-    var existing = input.parentNode && input.parentNode.querySelector("#" + statusId);
+    var existing = input.parentNode && input.parentNode.querySelector('[data-fils-promo-status="1"]');
     if (existing) existing.parentNode.removeChild(existing);
   }
 
-  function validatePromoCode(input) {
+  function validatePromoCode(input, form) {
     var code = input.value.trim().toUpperCase();
     if (!code) {
       removePromoStatus(input);
@@ -141,16 +170,17 @@
         if (result.ok && result.data.ok) {
           showPromoStatus(
             input,
+            form,
             "\u2713 \u041f\u0440\u043e\u043c\u043e\u043a\u043e\u0434 \u043f\u0440\u0438\u043d\u044f\u0442! \u0421\u043a\u0438\u0434\u043a\u0430 " +
               result.data.clientDiscountPercent +
               "% \u0431\u0443\u0434\u0435\u0442 \u043f\u0440\u0438\u043c\u0435\u043d\u0435\u043d\u0430.",
             true,
           );
-          // Сохранить валидный код в хранилище
           persistRefCode(result.data.refCode);
         } else {
           showPromoStatus(
             input,
+            form,
             "\u2717 \u041f\u0440\u043e\u043c\u043e\u043a\u043e\u0434 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d. \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0438 \u043f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0441\u043d\u043e\u0432\u0430.",
             false,
           );
@@ -158,7 +188,6 @@
       })
       .catch(function () {
         clearTimeout(timer);
-        // Сеть недоступна — не мешаем отправке формы
       });
   }
 
@@ -187,8 +216,7 @@
   }
 
   function attachSuccessHandlers() {
-    var forms = document.querySelectorAll(".js-form-proccess, form");
-    forms.forEach(function (form) {
+    getLeadForms().forEach(function (form) {
       if (form.dataset.filsSuccess) return;
       form.dataset.filsSuccess = "1";
       form.addEventListener("tildaform:aftersuccess", function () {
@@ -198,18 +226,16 @@
   }
 
   function attachToForms(code) {
-    var forms = document.querySelectorAll("form");
-    forms.forEach(function (form) {
+    getLeadForms().forEach(function (form) {
       ensureHiddenField(form, code);
 
       if (!form.dataset.filsAttached) {
         form.dataset.filsAttached = "1";
 
-        // Blur-валидация промокода
         var promoInput = form.querySelector('input[name="promo_code"]');
         if (promoInput) {
           promoInput.addEventListener("blur", function () {
-            validatePromoCode(promoInput);
+            validatePromoCode(promoInput, form);
           });
           promoInput.addEventListener("input", function () {
             removePromoStatus(promoInput);
@@ -223,6 +249,16 @@
     });
   }
 
+  var rescanTimer = null;
+  function scheduleRescan() {
+    if (rescanTimer) return;
+    rescanTimer = setTimeout(function () {
+      rescanTimer = null;
+      attachToForms(getStoredRefCode());
+      attachSuccessHandlers();
+    }, 400);
+  }
+
   function init() {
     var queryRef = readQueryRef();
     if (queryRef) {
@@ -233,20 +269,45 @@
     attachToForms(refCode);
     attachSuccessHandlers();
 
-    var observer = new MutationObserver(function () {
-      attachToForms(getStoredRefCode());
-      attachSuccessHandlers();
-    });
-
-    observer.observe(document.documentElement, {
-      childList: true,
-      subtree: true,
-    });
+    if (typeof MutationObserver !== "undefined") {
+      var observer = new MutationObserver(function (mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+          var nodes = mutations[i].addedNodes;
+          for (var j = 0; j < nodes.length; j++) {
+            var node = nodes[j];
+            if (node.nodeType !== 1) continue;
+            if (node.tagName === "FORM" || (node.querySelector && node.querySelector("form"))) {
+              scheduleRescan();
+              return;
+            }
+          }
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
+  /** Запуск после инициализации Tilda (шапка Zero/T396), не в head до отрисовки */
+  function runWhenReady() {
+    try {
+      init();
+    } catch (_err) {
+      /* не ломаем остальной JS страницы */
+    }
   }
+
+  function scheduleStart() {
+    var start = function () {
+      setTimeout(runWhenReady, 50);
+    };
+    if (typeof window.t_onReady === "function") {
+      window.t_onReady(start);
+    } else if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", start);
+    } else {
+      start();
+    }
+  }
+
+  scheduleStart();
 })();
